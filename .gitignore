@@ -1,0 +1,218 @@
+## .gitignore for Visual Studio, .NET, and Node.js projects
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+x64/
+x86/
+[Aa][Rr][Mm]*/
+bld/
+Generated\ Files/
+*.log
+*.tlog
+
+# Visual Studio cache/options
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.cachefile
+*.dbmdl
+*.sdf
+*.opendb
+*.opensdf
+
+# Mono / Xamarin
+mono_crash.*
+
+# MSTest / NUnit / Test tools
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# StyleCop
+StyleCopReport.xml
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Common binary/intermediate files
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+!Directory.Build.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+
+# ClickOnce
+publish/
+
+# Publish profiles
+*.pubxml
+*.publishproj
+*.azurePubxml
+PublishScripts/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Azure
+csx/
+*.build.csdef
+ecf/
+rcf/
+
+# UWP / Store / Appx
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+# Logs / Crash dumps
+*.e2e
+*.svclog
+*.binlog
+
+# ReSharper / Rider / DotCover / CodeRush / JustMock
+_ReSharper*/
+*.DotSettings.user
+*.dotCover
+.cr/
+*.tss
+*.jmconfig
+*.sln.iml
+
+# Coverlet
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# NCrunch / MightyMoose
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+*.mm.*
+AutoTest.Net/
+
+# Node.js / frontend
+node_modules/
+bower_components/
+.sass-cache/
+dist/
+build/
+
+# Environment variables
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors / IDEs
+.idea/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# VSCode Workspaces & History
+*.code-workspace
+.history/
+.localhistory/
+.vshistory/
+
+# VS Test & Profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# TFS / GIT
+$tf/
+*.vspscc
+*.vssscc
+*.scc
+.gpState
+
+# SQL / BI
+*.mdf
+*.ldf
+*.ndf
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+*.rptproj.rsuser
+*- [Bb]ackup.rdl
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
+*.rptproj.bak
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# GhostDoc
+*.GhostDoc.xml
+
+# Ionide / F#
+.ionide/
+.fake/
+FodyWeavers.xsd
+
+# Paket
+.paket/paket.exe
+paket-files/
+
+# Other files
+*.pfx
+*.publishsettings
+~$*
+*~
+*.jfm
+*.dbproj.schemaview
+orleans.codegen.cs
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+.DS_Store
