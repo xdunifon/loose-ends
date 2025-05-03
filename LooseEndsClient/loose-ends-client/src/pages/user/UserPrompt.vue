@@ -17,7 +17,7 @@ async function submitAnswer() {
   await roundService.submitAnswer(promptResponse.value)
 
   setTimeout(async () => {
-    await roundStore.endRound();
+    await roundService.startVoting();
   }, 1000)
 }
 </script>

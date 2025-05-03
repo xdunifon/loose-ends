@@ -8,6 +8,8 @@ const roundStore = useRoundStore()
 
 async function submitVote(promptId) {
   await roundService.submitVote(promptId)
+
+  setTimeout(() => roundService.endRound(), 1000);
 }
 </script>
 
