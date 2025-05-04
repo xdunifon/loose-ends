@@ -15,7 +15,7 @@ public class PlayerController : ControllerBase
     public IActionResult JoinGame(string gameCode, [FromBody] string playerName)
     {
         var result = _gameService.AddPlayer(gameCode, playerName);
-        if (!result) return NotFound("Game not found");
+        if (result == null) return NotFound("Game not found");
         return Ok("Player joined");
     }
 }

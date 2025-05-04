@@ -1,4 +1,5 @@
 using LooseEndsApi.Hubs;
+using LooseEndsApi.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 
@@ -13,6 +14,22 @@ builder.Services.AddDbContext<GameDbContext>(options =>
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<PlayerService>();
+builder.Services.AddScoped<RoundService>();
+builder.Services.AddScoped<PromptService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors();
 app.MapHub<GameHub>("/gamehub");
 
 app.UseHttpsRedirection();

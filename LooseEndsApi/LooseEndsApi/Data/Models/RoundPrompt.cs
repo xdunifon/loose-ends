@@ -7,8 +7,8 @@
         public int PromptId { get; set; }
 
         // Navigation properties
-        public required Round Round { get; set; }
-        public required Prompt Prompt { get; set; }
-        public ICollection<PlayerResponse> PlayerResponses { get; set; }
+        public virtual Round Round { get; set; }
+        public virtual Prompt Prompt { get; set; }
+        public virtual List<PlayerResponse> PlayerResponses { get; set; }
     }
 }

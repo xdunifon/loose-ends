@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { signalRService } from '@/services/signalRService'
 
 export const useGameStore = defineStore('game', () => {
   // Programmer
@@ -21,6 +22,42 @@ export const useGameStore = defineStore('game', () => {
 
   const players = ref([])
 
+  const initSignalR = async () => {
+    await signalRService.start()
+
+    signalRService.on('GameStarted', (newRound) => {
+      inGame.value = true
+      inRound.value = true
+      console.log(newRound)
+    })
+
+    signalRService.on('PlayerJoined', (newSessionId, newPlayerName) => {
+      players.value.push(playerName)
+      inLobby.value = true
+      sessionId.value = newSessionId
+      playerName.value = newPlayerName
+    })
+
+    signalRService.on('GameCreated', (newSessionId) => {
+      sessionId.value = newSessionId
+      isHost.value = true
+      inLobby.value = true
+      console.log(`Session ID ${newSessionId} received`)
+    })
+
+    signalRService.on('GameStarted', () => {
+      inGame.value = true
+      inLobby.value = true
+      inRound.value = true
+    })
+
+    signalRService.on('RoundStarted', () => {
+      inRound.value = true
+    })
+
+    // Add more listeners
+  }
+
   return {
     debugMode,
 
@@ -36,5 +73,7 @@ export const useGameStore = defineStore('game', () => {
     playerId,
     playerName,
     players,
+
+    initSignalR,
   }
 })

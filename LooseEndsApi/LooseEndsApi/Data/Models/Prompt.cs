@@ -7,6 +7,6 @@
         public required string Content { get; set; }
 
         // Navigation property
-        public ICollection<RoundPrompt> RoundPrompts { get; set; }
+        public virtual List<RoundPrompt> RoundPrompts { get; set; }
     }
 }

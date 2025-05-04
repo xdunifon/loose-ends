@@ -12,13 +12,8 @@ const gameCode = ref('')
 const playerName = ref('')
 
 //#region FUNCTIONS
-async function joinGame() {
-  await gameService.joinGame(gameCode.value, playerName.value)
-
-  setTimeout(async () => {
-    await gameService.startGame(gameCode.value)
-  }, 1000) // Simulate a delay before game starts
-}
+const joinGame = async () => await gameService.joinGame(gameCode.value, playerName.value)
+const createGame = async () => await gameService.createGame();
 //#endregion
 </script>
 
@@ -37,6 +32,7 @@ async function joinGame() {
     </FloatLabel>
 
     <Button label="Join Game" class="mt-5 w-full" @click="joinGame"></Button>
+    <Button label="Create Game" class="mt-5 w-full" @click="createGame"></Button>
   </div>
   <div v-else>
     <h1 class="text-3xl font-bold text-center">Welcome to the Game!</h1>

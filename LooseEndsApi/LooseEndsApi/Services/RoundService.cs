@@ -11,15 +11,15 @@ namespace LooseEndsApi.Services
             _promptService = promptService;
         }
 
-        public Round CreateRound(GameSession session)
+        public async Task<Round> CreateRound(GameSession session)
         {
+
             var newRound = new Round()
             {
                 GameSession = session,
-                RoundPrompts = _promptService.CreateRoundPrompts(session)
             };
-
-            
+            newRound.RoundPrompts = await _promptService.CreateRoundPrompts(session, newRound);
+            return newRound;
         }
     }
 }

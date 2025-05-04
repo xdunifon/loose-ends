@@ -1,16 +1,7 @@
 import { useGameStore } from '@/stores/gameStore'
+import { signalRService } from './signalRService'
 
 export const gameService = {
-  async getSessionId() {
-    try {
-      let sessionId = 5
-      return sessionId
-    } catch (error) {
-      console.error('Error fetching session ID:', error)
-      throw error
-    }
-  },
-
   async joinGame(sessionId, playerName) {
     try {
       if (sessionId === '' || playerName === '') {
@@ -18,22 +9,23 @@ export const gameService = {
         return
       }
       const gameStore = useGameStore()
-      gameStore.inLobby = true
-      gameStore.gameCode = sessionId
-      gameStore.playerName = playerName
+      await gameStore.initSignalR()
+      signalRService.send('JoinGame', sessionId, playerName)
     } catch (error) {
       console.error('Error joining game:', error)
       throw error
     }
   },
 
+  async createGame() {
+    const gameStore = useGameStore()
+    await gameStore.initSignalR()
+    await signalRService.send('CreateGame')
+  },
+
   async startGame(sessionId) {
     try {
-      const gameStore = useGameStore()
-      gameStore.gameCode = sessionId
-      gameStore.inLobby = true
-      gameStore.inGame = true
-      gameStore.inRound = true
+      await signalRService.send('StartGame', sessionId)
     } catch (error) {
       console.error('Error starting game:', error)
       throw error

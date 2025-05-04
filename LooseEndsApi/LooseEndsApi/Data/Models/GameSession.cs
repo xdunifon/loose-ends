@@ -17,8 +17,8 @@ namespace LooseEndsApi.Data.Models
         public string GameCode { get; set; } = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
 
         // Navigation Property
-        public List<Player> Players { get; set; } = [];
-        public List<Round> Rounds { get; set; } = [];
+        public virtual List<Player> Players { get; set; } = new();
+        public virtual List<Round> Rounds { get; set; } = new();
     }
 
 }

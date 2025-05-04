@@ -9,7 +9,7 @@
         public int Votes { get; set; } = 0;
 
         // Navigation properties
-        public required Player Player { get; set; }
-        public required RoundPrompt RoundPrompt { get; set; }
+        public virtual Player Player { get; set; }
+        public virtual RoundPrompt RoundPrompt { get; set; }
     }
 }

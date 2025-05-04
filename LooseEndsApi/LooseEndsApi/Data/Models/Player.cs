@@ -13,7 +13,7 @@ namespace LooseEndsApi.Data.Models
         public int Points { get; set; } = 0;
 
         public int GameSessionId { get; set; }  // Foreign Key
-        public GameSession GameSession { get; set; }  // Navigation Property
+        public virtual GameSession GameSession { get; set; }  // Navigation Property
     }
 
 }

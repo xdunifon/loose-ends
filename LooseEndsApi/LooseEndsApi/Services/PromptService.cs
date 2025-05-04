@@ -1,4 +1,5 @@
 ﻿using LooseEndsApi.Data.Models;
+using LooseEndsApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
@@ -8,10 +9,10 @@ namespace LooseEndsApi.Services
     {
         public PromptService(GameDbContext context) : base(context) { }
 
-        public async Task<ICollection<RoundPrompt>> CreateRoundPrompts(GameSession session, Round round)
+        public async Task<List<RoundPrompt>> CreateRoundPrompts(GameSession session, Round round)
         {
             var assignedPlayers = new List<Player>();
-            int promptCount = (session.Players.Count + 1) / 2; // Handles odd/even automatically
+            int promptCount = (session.Players.Count() + 1) / 2; // Handles odd/even automatically
             var roundPrompts = new List<RoundPrompt>(promptCount);
 
             for (int i = 0; i < promptCount; i++)
@@ -19,7 +20,7 @@ namespace LooseEndsApi.Services
                 var promptPlayers = new List<Player>();
                 for (int j = 0; j < 2; j++)
                 {
-                    Player? player = await GetRandomPlayer(session.Id, assignedPlayers);
+                    Player? player = session.GetRandomPlayer(assignedPlayers);
                     if (player != null)
                     {
                         assignedPlayers.Add(player);

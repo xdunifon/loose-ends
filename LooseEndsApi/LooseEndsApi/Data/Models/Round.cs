@@ -7,8 +7,7 @@
         public int GameSessionId { get; set; }
 
         // Navigation property
-        public GameSession GameSession { get; set; }
-        public ICollection<RoundPrompt> RoundPrompts { get; set; }
-        public ICollection<>
+        public virtual GameSession GameSession { get; set; }
+        public virtual List<RoundPrompt> RoundPrompts { get; set; }
     }
 }

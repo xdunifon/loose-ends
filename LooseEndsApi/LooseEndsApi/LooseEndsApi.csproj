@@ -23,11 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Database\" />
-    <Folder Include="Models\GameSessions\" />
-    <Folder Include="Models\Prompts\" />
     <Folder Include="Models\PlayerResponses\" />
-    <Folder Include="Models\Rounds\" />
-    <Folder Include="Models\RoundPrompts\" />
     <Folder Include="Models\Players\" />
   </ItemGroup>
 

@@ -11,6 +11,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "@primeuix/themes": "^1.0.0",
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",

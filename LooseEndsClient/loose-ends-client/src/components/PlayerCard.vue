@@ -8,6 +8,6 @@ const props = defineProps({
 
 <template>
   <Card class="mt-3">
-    <template #title class="p-0">{{ props.name }}</template>
+    <template #title>{{ props.name }}</template>
   </Card>
 </template>
