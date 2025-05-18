@@ -1,4 +1,5 @@
 ﻿using LooseEndsApi.Data.Models;
+using LooseEndsApi.Extensions;
 
 namespace LooseEndsApi.Services
 {
@@ -13,10 +14,10 @@ namespace LooseEndsApi.Services
 
         public async Task<Round> CreateRound(GameSession session)
         {
-
             var newRound = new Round()
             {
                 GameSession = session,
+                Number = session.GetLatestRound()?.Number + 1 ?? 1
             };
             newRound.RoundPrompts = await _promptService.CreateRoundPrompts(session, newRound);
             return newRound;

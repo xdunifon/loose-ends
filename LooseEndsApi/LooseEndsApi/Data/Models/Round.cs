@@ -3,8 +3,12 @@
     public class Round
     {
         public int Id { get; set; }
-        public bool IsCompleted { get; set; } = false;
         public int GameSessionId { get; set; }
+
+        public bool IsCompleted { get; set; } = false;
+        public bool IsVoting { get; set; } = false;
+
+        public int Number { get; set; }
 
         // Navigation property
         public virtual GameSession GameSession { get; set; }

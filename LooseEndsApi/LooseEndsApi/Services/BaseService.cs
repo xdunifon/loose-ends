@@ -11,24 +11,12 @@
 
         public void SaveContext()
         {
-            try
-            {
-                _context.SaveChanges();
-            } catch (Exception ex)
-            {
-                throw;
-            }
+            _context.SaveChanges();
         }
 
         public async Task SaveContextAsync()
         {
-            try
-            {
-                await _context.SaveChangesAsync();
-            } catch (Exception ex)
-            {
-                throw;
-            }
+            await _context.SaveChangesAsync();
         }
     }
 }

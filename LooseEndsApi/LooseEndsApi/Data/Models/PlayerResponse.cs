@@ -6,10 +6,10 @@
         public int PlayerId { get; set; }
         public int RoundPromptId { get; set; }
         public string? Answer { get; set; }  // nullable answer
-        public int Votes { get; set; } = 0;
 
         // Navigation properties
         public virtual Player Player { get; set; }
         public virtual RoundPrompt RoundPrompt { get; set; }
+        public virtual List<PlayerVote> Votes { get; set; } = new List<PlayerVote>();
     }
 }

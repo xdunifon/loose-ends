@@ -3,14 +3,18 @@ using LooseEndsApi.Models.Rounds;
 using LooseEndsApi.Services;
 using Microsoft.EntityFrameworkCore;
 using LooseEndsApi.Models.Prompts;
+using LooseEndsApi.Models;
+using Microsoft.Extensions.Options;
 
 public class GameService : BaseService
 {
     private PlayerService _playerService;
     private RoundService _roundService;
+    private readonly GameSettings _settings;
 
-    public GameService(GameDbContext context, PlayerService playerService, RoundService roundService) : base(context) 
+    public GameService(IOptions<GameSettings> options, GameDbContext context, PlayerService playerService, RoundService roundService) : base(context) 
     {
+        _settings = options.Value;
         _playerService = playerService;
         _roundService = roundService;
     }
@@ -37,13 +41,12 @@ public class GameService : BaseService
     /// <returns></returns>
     public async Task<RoundDto?> StartGame(GameSession session)
     {
-        session.IsStarted = true;
         return await StartNextRoundOrCompleteGame(session);
     }
 
     public async Task<RoundDto?> StartNextRoundOrCompleteGame(GameSession session)
     {
-        if (session.Rounds.Count() >= 3)
+        if (session.Rounds.Count() >= _settings.NumberOfRounds)
         {
             await CompleteGame(session);
             return null;
@@ -56,10 +59,11 @@ public class GameService : BaseService
         return new RoundDto
         {
             GameCode = session.GameCode,
+            EndDateTime = DateTime.Now.AddSeconds(session.RoundTimer + 1), // Given a buffer of 1 to account for transmission speeds, not sure how this plays out in practice
             Prompts = newRound.RoundPrompts.Select(p => new PromptDto
             {
                 AssignedPlayers = p.PlayerResponses.Select(pr => pr.Player.Name).ToArray(),
-                Content = p.Prompt.Content
+                Content = p.Prompt
             }).ToArray()
         };
     }
@@ -67,7 +71,7 @@ public class GameService : BaseService
     public async Task<Player?> CompleteGame(GameSession session)
     {
         session.IsCompleted = true;
-        return _playerService.GetWinner(session);
+        return await _playerService.GetWinner(session);
     }
 
     public async Task<Player?> AddPlayer(string gameCode, string playerName)

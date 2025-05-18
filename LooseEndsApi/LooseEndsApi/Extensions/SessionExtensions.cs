@@ -5,6 +5,10 @@ namespace LooseEndsApi.Extensions
 {
     public static class SessionExtensions
     {
+        public static Round? GetLatestRound(this GameSession session)
+        {
+            return session.Rounds.OrderByDescending(r => r.Number).FirstOrDefault();
+        }
         public static Player? GetRandomPlayer(this GameSession session, List<Player> excludedPlayers)
         {
             Player[] players = excludedPlayers.Count == 0 ? session.Players.ToArray() : session.Players.Where(p => !excludedPlayers.Contains(p)).ToArray();

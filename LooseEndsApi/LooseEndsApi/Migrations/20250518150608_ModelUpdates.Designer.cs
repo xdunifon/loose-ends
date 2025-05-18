@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LooseEndsApi.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518150608_ModelUpdates")]
+    partial class ModelUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -28,7 +31,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DefaultResponses", (string)null);
+                    b.ToTable("DefaultResponses");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.GameSession", b =>
@@ -52,7 +55,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameSessions", (string)null);
+                    b.ToTable("GameSessions");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Player", b =>
@@ -75,7 +78,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasIndex("GameSessionId");
 
-                    b.ToTable("Players", (string)null);
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.PlayerResponse", b =>
@@ -100,7 +103,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasIndex("RoundPromptId");
 
-                    b.ToTable("PlayerResponses", (string)null);
+                    b.ToTable("PlayerResponses");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.PlayerVote", b =>
@@ -122,7 +125,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasIndex("ResponseId");
 
-                    b.ToTable("PlayerVotes", (string)null);
+                    b.ToTable("PlayerVotes");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Prompt", b =>
@@ -140,7 +143,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prompts", (string)null);
+                    b.ToTable("Prompts");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Round", b =>
@@ -165,7 +168,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasIndex("GameSessionId");
 
-                    b.ToTable("Rounds", (string)null);
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.RoundPrompt", b =>
@@ -188,7 +191,7 @@ namespace LooseEndsApi.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("RoundPrompts", (string)null);
+                    b.ToTable("RoundPrompts");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Player", b =>

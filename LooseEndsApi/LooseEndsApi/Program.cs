@@ -1,4 +1,5 @@
 using LooseEndsApi.Hubs;
+using LooseEndsApi.Models;
 using LooseEndsApi.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
@@ -17,6 +18,8 @@ builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<PlayerService>();
 builder.Services.AddScoped<RoundService>();
 builder.Services.AddScoped<PromptService>();
+
+builder.Services.Configure<GameSettings>(builder.Configuration.GetSection("GameSettings"));
 
 builder.Services.AddCors(options =>
 {

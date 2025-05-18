@@ -23,10 +23,11 @@ namespace LooseEndsApi.Services
                     Player? player = session.GetRandomPlayer(assignedPlayers);
                     if (player != null)
                     {
-                        assignedPlayers.Add(player);
+                        assignedPlayers.Add(player); // add to assigned list so they aren't assigned a second time
                         promptPlayers.Add(player);
                     } else
                     {
+                        // This may change but the current idea is to add a bot player that the DB is seeded with
                         promptPlayers.Add(await _context.Players.FindAsync(0));
                     }
                 }
@@ -44,14 +45,13 @@ namespace LooseEndsApi.Services
             var roundPrompt = new RoundPrompt
             {
                 Round = round,
-                Prompt = prompt,
-                PlayerResponses = new List<PlayerResponse>() // init empty for now
+                Prompt = prompt.Content,
             };
 
             roundPrompt.PlayerResponses = promptPlayers.Select(player => new PlayerResponse
             {
                 Player = player,
-                RoundPrompt = roundPrompt
+                RoundPrompt = roundPrompt,
             }).ToList();
 
             return roundPrompt;
