@@ -1,38 +1,41 @@
 <script setup>
 import { Card } from 'primevue'
-import { useRoundStore } from '@/stores/roundStore';
-import UserDefault from '@/pages/user/UserDefault.vue';
-import { roundService } from '@/services/roundService';
+import { roundService } from '@/services/roundService'
+import { ref } from 'vue'
+import GameTimer from '@/components/Common/GameTimer.vue'
 
-const roundStore = useRoundStore()
+const props = defineProps({
+  replies: { type: Object },
+  hasVoted: { type: Boolean, default: false },
+  votingEndTimeStamp: { type: Date, required: true }
+})
 
-async function submitVote(promptId) {
-  await roundService.submitVote(promptId)
+const hasVoted = ref(props.hasVoted)
+const outOfTime = ref(false)
 
-  setTimeout(() => roundService.endRound(), 1000);
+async function submitVote(replyId) {
+  await roundService.submitVote(replyId)
+  hasVoted.value = true
 }
 </script>
 
 <template>
-  <div v-if="!roundStore.hasVoted">
+  <div v-if="!hasVoted && !outOfTime">
 
     <h1 class="text-3xl font-bold">Voting</h1>
-
-    <Card class="mt-3">
-      <template #content>Jason thought he'd never graduate from university until he discovered this neat little
-        trick..
-      </template>
-    </Card>
-
-    <Card class="mt-3 hover:bg-(--color-gray-800)!" @click="submitVote(1)">
-      <template #content> Prompt answer number one </template>
-    </Card>
-
-    <Card class="mt-3 hover:bg-(--color-gray-800)!" @click="submitVote(2)">
-      <template #content> Prompt answer number two </template>
-    </Card>
+    <GameTimer :end-time-stamp="props.votingEndTimeStamp" @timer-end="outOfTime = true" />
+    <div class="mt-3 flex flex-col gap-4">
+      <div v-for="{ reply, index } in replies" :key="index" @click="submitVote(reply.id)">
+        <Card>
+          <template #content>{{ reply.number }}</template>
+        </Card>
+      </div>
+    </div>
 
     <div class="text-center mt-20">Tap on the winning prompt reply</div>
   </div>
-  <UserDefault v-else />
+  <div v-else>
+    <h1 v-if="hasVoted">Vote submitted</h1>
+    <h1 v-else>Random vote submitted</h1>
+  </div>
 </template>

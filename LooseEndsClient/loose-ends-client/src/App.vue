@@ -7,13 +7,13 @@ import SharedLoading from '@/pages/SharedLoading.vue'
 
 // Game pages
 import GameLobby from '@/pages/game/GameLobby.vue'
-import GameRound from '@/pages/game/GameRound.vue'
+import GameRound from '@/pages/game/GamePrompting.vue'
 import GameVoting from '@/pages/game/GameVoting.vue'
 import GameLeaderboard from '@/pages/game/GameLeaderboard.vue'
 import GameWin from '@/pages/game/GameWin.vue'
 
 // User pages
-import UserDefault from '@/pages/user/UserDefault.vue'
+import UserDefault from '@/pages/user/UserSplash.vue'
 import UserWelcome from '@/pages/user/UserWelcome.vue'
 import UserPrompt from '@/pages/user/UserPrompt.vue'
 import UserVoting from '@/pages/user/UserVoting.vue'
