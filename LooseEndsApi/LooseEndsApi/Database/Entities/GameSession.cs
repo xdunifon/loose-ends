@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
-namespace LooseEndsApi.Data.Models
+namespace LooseEndsApi.Database.Entities
 {
     public class GameSession
     {
@@ -18,6 +18,22 @@ namespace LooseEndsApi.Data.Models
         // Navigation Property
         public virtual List<Player> Players { get; set; } = new();
         public virtual List<Round> Rounds { get; set; } = new();
+
+        public Round? GetLatestRound()
+        {
+            return Rounds.OrderByDescending(r => r.Number).FirstOrDefault();
+        }
+
+        public Player? GetRandomPlayer(IEnumerable<Player> excludedPlayers)
+        {
+            Player[] players = excludedPlayers.Any() ? Players.Where(p => !excludedPlayers.Contains(p)).ToArray() : Players.ToArray();
+
+            if (players.Length == 0) return null;
+
+            var rng = new Random();
+            int ranIndex = rng.Next(0, players.Length);
+            return players[ranIndex];
+        }
     }
 
 }

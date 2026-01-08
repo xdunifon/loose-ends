@@ -1,4 +1,4 @@
-﻿using LooseEndsApi.Data.Models;
+﻿using LooseEndsApi.Database.Entities;
 using LooseEndsApi.Models.Rounds;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;

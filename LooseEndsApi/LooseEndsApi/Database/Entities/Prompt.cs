@@ -1,4 +1,4 @@
-﻿namespace LooseEndsApi.Data.Models
+﻿namespace LooseEndsApi.Database.Entities
 {
     public class Prompt
     {

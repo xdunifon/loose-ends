@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LooseEndsApi.Migrations
 {
-    [DbContext(typeof(GameDbContext))]
+    [DbContext(typeof(GameContext))]
     partial class GameDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

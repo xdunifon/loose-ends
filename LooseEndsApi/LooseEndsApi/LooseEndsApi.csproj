@@ -22,9 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="Models\PlayerResponses\" />
-    <Folder Include="Models\Players\" />
+    <Folder Include="Dtos\PlayerResponses\" />
+    <Folder Include="Dtos\Players\" />
   </ItemGroup>
 
 </Project>

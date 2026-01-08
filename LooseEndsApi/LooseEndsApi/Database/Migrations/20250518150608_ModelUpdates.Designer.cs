@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LooseEndsApi.Migrations
 {
-    [DbContext(typeof(GameDbContext))]
-    [Migration("20250503232758_Test")]
-    partial class Test
+    [DbContext(typeof(GameContext))]
+    [Migration("20250518150608_ModelUpdates")]
+    partial class ModelUpdates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,13 +47,10 @@ namespace LooseEndsApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("InLobby")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsStarted")
+                    b.Property<int>("RoundTimer")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -99,16 +96,36 @@ namespace LooseEndsApi.Migrations
                     b.Property<int>("RoundPromptId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Votes")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
 
                     b.HasIndex("RoundPromptId");
 
                     b.ToTable("PlayerResponses");
+                });
+
+            modelBuilder.Entity("LooseEndsApi.Data.Models.PlayerVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ResponseId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
+
+                    b.HasIndex("ResponseId");
+
+                    b.ToTable("PlayerVotes");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Prompt", b =>
@@ -141,6 +158,12 @@ namespace LooseEndsApi.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsVoting")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GameSessionId");
@@ -154,15 +177,17 @@ namespace LooseEndsApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PromptId")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Prompt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RoundId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PromptId");
 
                     b.HasIndex("RoundId");
 
@@ -183,8 +208,8 @@ namespace LooseEndsApi.Migrations
             modelBuilder.Entity("LooseEndsApi.Data.Models.PlayerResponse", b =>
                 {
                     b.HasOne("LooseEndsApi.Data.Models.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId")
+                        .WithOne("Responses")
+                        .HasForeignKey("LooseEndsApi.Data.Models.PlayerResponse", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -197,6 +222,25 @@ namespace LooseEndsApi.Migrations
                     b.Navigation("Player");
 
                     b.Navigation("RoundPrompt");
+                });
+
+            modelBuilder.Entity("LooseEndsApi.Data.Models.PlayerVote", b =>
+                {
+                    b.HasOne("LooseEndsApi.Data.Models.Player", "Player")
+                        .WithOne("Votes")
+                        .HasForeignKey("LooseEndsApi.Data.Models.PlayerVote", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LooseEndsApi.Data.Models.PlayerResponse", "Response")
+                        .WithMany()
+                        .HasForeignKey("ResponseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Response");
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Round", b =>
@@ -212,19 +256,11 @@ namespace LooseEndsApi.Migrations
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.RoundPrompt", b =>
                 {
-                    b.HasOne("LooseEndsApi.Data.Models.Prompt", "Prompt")
-                        .WithMany("RoundPrompts")
-                        .HasForeignKey("PromptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LooseEndsApi.Data.Models.Round", "Round")
                         .WithMany("RoundPrompts")
                         .HasForeignKey("RoundId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Prompt");
 
                     b.Navigation("Round");
                 });
@@ -236,9 +272,13 @@ namespace LooseEndsApi.Migrations
                     b.Navigation("Rounds");
                 });
 
-            modelBuilder.Entity("LooseEndsApi.Data.Models.Prompt", b =>
+            modelBuilder.Entity("LooseEndsApi.Data.Models.Player", b =>
                 {
-                    b.Navigation("RoundPrompts");
+                    b.Navigation("Responses")
+                        .IsRequired();
+
+                    b.Navigation("Votes")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LooseEndsApi.Data.Models.Round", b =>

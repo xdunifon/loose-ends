@@ -1,11 +1,11 @@
-﻿using LooseEndsApi.Data.Models;
+﻿using LooseEndsApi.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEndsApi.Services
 {
     public class PlayerService : BaseService
     {
-        public PlayerService(GameDbContext context) : base(context) { }
+        public PlayerService(GameContext context) : base(context) { }
 
         public Player CreatePlayer(GameSession session, string playerName)
         {

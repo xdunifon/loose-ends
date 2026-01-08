@@ -2,9 +2,9 @@
 {
     public abstract class BaseService
     {
-        protected readonly GameDbContext _context;
+        protected readonly GameContext _context;
 
-        public BaseService(GameDbContext context)
+        public BaseService(GameContext context)
         {
             _context = context;
         }

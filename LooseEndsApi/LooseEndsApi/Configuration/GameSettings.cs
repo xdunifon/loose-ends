@@ -1,4 +1,4 @@
-﻿namespace LooseEndsApi.Models
+﻿namespace LooseEndsApi.Configuration
 {
     public class GameSettings
     {

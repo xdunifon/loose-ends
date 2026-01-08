@@ -1,5 +1,4 @@
-﻿using LooseEndsApi.Data.Models;
-using LooseEndsApi.Extensions;
+﻿using LooseEndsApi.Database.Entities;
 
 namespace LooseEndsApi.Services
 {
@@ -7,7 +6,7 @@ namespace LooseEndsApi.Services
     {
         private PromptService _promptService;
 
-        public RoundService(GameDbContext context, PromptService promptService) : base(context) 
+        public RoundService(GameContext context, PromptService promptService) : base(context) 
         {
             _promptService = promptService;
         }

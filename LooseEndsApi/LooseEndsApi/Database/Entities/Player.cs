@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace LooseEndsApi.Data.Models
+namespace LooseEndsApi.Database.Entities
 {
     public class Player
     {

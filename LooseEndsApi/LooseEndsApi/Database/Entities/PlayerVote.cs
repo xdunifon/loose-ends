@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LooseEndsApi.Data.Models
+namespace LooseEndsApi.Database.Entities
 {
     public class PlayerVote
     {

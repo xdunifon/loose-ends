@@ -1,6 +1,0 @@
-@LooseEndsApi_HostAddress = http://localhost:5122
-
-GET {{LooseEndsApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

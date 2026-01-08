@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LooseEndsApi.Migrations
 {
-    [DbContext(typeof(GameDbContext))]
+    [DbContext(typeof(GameContext))]
     [Migration("20250330214800_InitialCreate")]
     partial class InitialCreate
     {

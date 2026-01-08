@@ -1,10 +1,10 @@
-﻿using LooseEndsApi.Data.Models;
-using LooseEndsApi.Models.Rounds;
+﻿using LooseEndsApi.Models.Rounds;
 using LooseEndsApi.Services;
 using Microsoft.EntityFrameworkCore;
 using LooseEndsApi.Models.Prompts;
-using LooseEndsApi.Models;
 using Microsoft.Extensions.Options;
+using LooseEndsApi.Database.Entities;
+using LooseEndsApi.Configuration;
 
 public class GameService : BaseService
 {
@@ -12,7 +12,7 @@ public class GameService : BaseService
     private RoundService _roundService;
     private readonly GameSettings _settings;
 
-    public GameService(IOptions<GameSettings> options, GameDbContext context, PlayerService playerService, RoundService roundService) : base(context) 
+    public GameService(IOptions<GameSettings> options, GameContext context, PlayerService playerService, RoundService roundService) : base(context) 
     {
         _settings = options.Value;
         _playerService = playerService;

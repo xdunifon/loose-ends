@@ -1,13 +1,11 @@
-﻿using LooseEndsApi.Data.Models;
-using LooseEndsApi.Extensions;
+﻿using LooseEndsApi.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace LooseEndsApi.Services
 {
     public class PromptService : BaseService
     {
-        public PromptService(GameDbContext context) : base(context) { }
+        public PromptService(GameContext context) : base(context) { }
 
         public async Task<List<RoundPrompt>> CreateRoundPrompts(GameSession session, Round round)
         {

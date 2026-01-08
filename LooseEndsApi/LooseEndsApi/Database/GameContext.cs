@@ -1,12 +1,12 @@
-﻿using LooseEndsApi.Data.Models;
+﻿using LooseEndsApi.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System.Collections.Generic;
 using System.Configuration;
 
-public class GameDbContext : DbContext
+public class GameContext : DbContext
 {
-    public GameDbContext(DbContextOptions<GameDbContext> options) : base(options) { }
+    public GameContext(DbContextOptions<GameContext> options) : base(options) { }
 
     public DbSet<GameSession> GameSessions { get; set; }
     public DbSet<Player> Players { get; set; }
