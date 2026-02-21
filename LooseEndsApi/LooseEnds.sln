@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11512.155 d18.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LooseEnds.Api", "LooseEnds.Api\LooseEnds.Api.csproj", "{E55F9AF3-9605-4F0B-903F-EA2C39493D27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LooseEnds.Database", "LooseEnds.Database\LooseEnds.Database.csproj", "{B96024B5-D69D-4CC5-859D-35848C54D7E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E55F9AF3-9605-4F0B-903F-EA2C39493D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E55F9AF3-9605-4F0B-903F-EA2C39493D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E55F9AF3-9605-4F0B-903F-EA2C39493D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E55F9AF3-9605-4F0B-903F-EA2C39493D27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B96024B5-D69D-4CC5-859D-35848C54D7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B96024B5-D69D-4CC5-859D-35848C54D7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B96024B5-D69D-4CC5-859D-35848C54D7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B96024B5-D69D-4CC5-859D-35848C54D7E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {403A7987-6DFB-4632-98CB-8A90CB18C3C9}
+	EndGlobalSection
+EndGlobal
