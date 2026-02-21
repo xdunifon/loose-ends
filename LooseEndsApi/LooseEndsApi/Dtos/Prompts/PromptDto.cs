@@ -1,9 +1,8 @@
-﻿namespace LooseEndsApi.Models.Prompts
+﻿namespace LooseEndsApi.Models.Prompts;
+
+public class PromptDto
 {
-    public class PromptDto
-    {
-        public int PromptId { get; set; }
-        public required string[] AssignedPlayers { get; set; }
-        public required string Content { get; set; }
-    }
+    public int PromptId { get; set; }
+    public required string[] AssignedPlayers { get; set; }
+    public required string Content { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace LooseEndsApi.Models.GameSessions
+﻿namespace LooseEndsApi.Models.GameSessions;
+
+public class SessionDto
 {
-    public class SessionDto
-    {
-        public string GameCode { get; set; }
-    }
+    public string GameCode { get; set; }
 }

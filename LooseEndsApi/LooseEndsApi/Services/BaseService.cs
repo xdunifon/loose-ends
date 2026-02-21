@@ -1,22 +1,21 @@
-﻿namespace LooseEndsApi.Services
+﻿namespace LooseEndsApi.Services;
+
+public abstract class BaseService
 {
-    public abstract class BaseService
+    protected readonly GameContext _context;
+
+    public BaseService(GameContext context)
     {
-        protected readonly GameContext _context;
+        _context = context;
+    }
 
-        public BaseService(GameContext context)
-        {
-            _context = context;
-        }
+    public void SaveContext()
+    {
+        _context.SaveChanges();
+    }
 
-        public void SaveContext()
-        {
-            _context.SaveChanges();
-        }
-
-        public async Task SaveContextAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+    public async Task SaveContextAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LooseEndsApi.Controllers
+namespace LooseEndsApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class PromptController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PromptController : ControllerBase
-    {
-    }
 }

@@ -1,7 +1,6 @@
-﻿namespace LooseEndsApi.Configuration
+﻿namespace LooseEndsApi.Configuration;
+
+public class GameSettings
 {
-    public class GameSettings
-    {
-        public int NumberOfRounds { get; set; }
-    }
+    public int NumberOfRounds { get; set; }
 }
