@@ -1,6 +1,6 @@
 ﻿using LooseEnds.Api.Common;
-using LooseEnds.Api.Database;
-using LooseEnds.Api.Database.Entities;
+using LooseEnds.Database;
+using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEnds.Api.Resources.Prompts;
@@ -42,17 +42,9 @@ public class PromptService : BaseService
     {
         var prompt = await GetRandomPrompt();
 
-        var roundPrompt = new RoundPrompt
-        {
-            Round = round,
-            Prompt = prompt.Content,
-        };
+        var roundPrompt = new RoundPrompt(round, prompt.Content, 30);
 
-        roundPrompt.PlayerResponses = promptPlayers.Select(player => new PlayerResponse
-        {
-            Player = player,
-            RoundPrompt = roundPrompt,
-        }).ToList();
+        roundPrompt.PlayerResponses = promptPlayers.Select(player => new PlayerResponse(player, roundPrompt)).ToList();
 
         return roundPrompt;
     }
@@ -69,7 +61,7 @@ public class PromptService : BaseService
     public async Task<Player?> GetRandomPlayer(int sessionId, List<Player> listToExclude)
     {
         var rng = new Random();
-        List<Player> players = await _context.Players.Where(player => player.GameSessionId == sessionId && !listToExclude.Contains(player)).ToListAsync();
+        List<Player> players = await _context.Players.Where(player => player.SessionId == sessionId && !listToExclude.Contains(player)).ToListAsync();
         if (players.Count == 0)
         {
             return null;

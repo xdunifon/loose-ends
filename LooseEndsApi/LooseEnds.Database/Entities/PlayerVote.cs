@@ -5,12 +5,11 @@ namespace LooseEnds.Database.Entities;
 
 public class PlayerVote
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    [Key, ForeignKey("Player")]
     public int PlayerId { get; set; }
-    public int ResponseId { get; set; }
+    public virtual Player Player { get; set; } = default!;
 
-    public virtual Player Player { get; set; }
-    public virtual PlayerResponse Response { get; set; }
+    [Key, ForeignKey("Response")]
+    public int ResponseId { get; set; }
+    public virtual PlayerResponse Response { get; set; } = default!;
 }

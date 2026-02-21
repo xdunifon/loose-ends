@@ -1,23 +1,26 @@
 ﻿using LooseEnds.Api.Common;
-using LooseEnds.Api.Database;
-using LooseEnds.Api.Database.Entities;
+using LooseEnds.Database;
+using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEnds.Api.Resources.Players;
 
-public class PlayerService : BaseService
+public class PlayerService(GameContext context) : BaseService(context)
 {
-    public PlayerService(GameContext context) : base(context) { }
-
-    public Player CreatePlayer(GameSession session, string playerName)
+    public async Task GetPlayersBySessionIdAsync(int sessionId)
     {
-        return new Player { Name = playerName, GameSession = session };
+        var session = await _context.GameSessions
+            .Include(s => s.Players)
+            .FirstOrDefaultAsync(s => s.Id == sessionId)
+            ?? throw new NotFoundException($"Couldn't find session with ID {sessionId}");   
     }
+    public Task GetPlayerByIdAsync(int id) => throw new NotImplementedException();
+    public Task GetWinningPlayerBySessionIdAsync(int sessionId) => throw new NotImplementedException();
 
     public async Task<Player?> GetWinner(GameSession session)
     {
         Player winner = await _context.Players
-            .Where(player => player.GameSessionId == session.Id)
+            .Where(player => player.SessionId == session.Id)
             .OrderByDescending(player => player.Points)
             .FirstAsync();
 

@@ -1,4 +1,4 @@
-﻿using LooseEnds.Api.Database;
+﻿using LooseEnds.Database;
 
 namespace LooseEnds.Api.Common;
 

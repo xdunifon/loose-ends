@@ -1,6 +1,6 @@
 using LooseEnds.Api.Configuration;
-using LooseEnds.Api.Database;
 using LooseEnds.Api.Resources;
+using LooseEnds.Database;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

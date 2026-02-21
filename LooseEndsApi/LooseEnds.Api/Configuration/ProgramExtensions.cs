@@ -1,8 +1,7 @@
-﻿using LooseEnds.Api.Database;
-using LooseEnds.Api.Resources.Players;
+﻿using LooseEnds.Api.Resources.Players;
 using LooseEnds.Api.Resources.Prompts;
-using LooseEnds.Api.Resources.Rounds;
 using LooseEnds.Api.Resources.Sessions;
+using LooseEnds.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEnds.Api.Configuration;
@@ -34,7 +33,6 @@ public static class ProgramExtensions
     {
         builder.Services.AddScoped<GameService>();
         builder.Services.AddScoped<PlayerService>();
-        builder.Services.AddScoped<RoundService>();
         builder.Services.AddScoped<PromptService>();
     }
 

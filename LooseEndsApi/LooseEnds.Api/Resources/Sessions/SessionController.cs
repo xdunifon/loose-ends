@@ -21,17 +21,4 @@ public class SessionController(GameService service, IHubContext<GameHub> hubCont
         if (game == null) return NotFound("Game not found");
         return Ok(game);
     }
-
-    [HttpPost("test-hub")]
-    public async Task<IActionResult> SendTestHubMethod()
-    {
-        await hubContext.Clients.All.SendAsync("ReceiveTestData", new { Message = "Hello World", Time = DateTime.Now });
-        return Ok("Method sent");
-    }
-
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        return Ok("Hello World");
-    }
 }

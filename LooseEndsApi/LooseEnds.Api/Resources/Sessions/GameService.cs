@@ -1,18 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using LooseEnds.Api.Database.Entities;
 using LooseEnds.Api.Configuration;
-using LooseEnds.Api.Database;
 using LooseEnds.Api.Resources.Rounds.Dtos;
 using LooseEnds.Api.Common;
 using LooseEnds.Api.Resources.Players;
-using LooseEnds.Api.Resources.Rounds;
 using LooseEnds.Api.Resources.Prompts.Dtos;
+using LooseEnds.Database;
+using LooseEnds.Database.Entities;
 
 namespace LooseEnds.Api.Resources.Sessions;
 
-public class GameService(IOptions<GameSettings> options, GameContext context, PlayerService playerService, RoundService roundService) : BaseService(context)
+public class GameService(IOptions<GameSettings> options, GameContext context, PlayerService playerService) : BaseService(context)
 {
+    // Get game summary by session code
+
     public async Task<GameSession?> GetGame(string gameCode)
     {
         return await _context.GameSessions.FirstOrDefaultAsync(g => g.GameCode == gameCode);
@@ -20,7 +21,7 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
 
     public async Task<string> CreateGame()
     {
-        var newGame = new GameSession();
+        var newGame = new GameSession(30);
         _context.GameSessions.Add(newGame);
 
         await _context.SaveChangesAsync();
@@ -46,7 +47,7 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
             return null;
         }
 
-        Round newRound = await roundService.CreateRound(session);
+        Round newRound = new(session, session.Rounds.Count + 1);
         _context.Rounds.Add(newRound);
         await SaveContextAsync();
 
@@ -62,10 +63,10 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
         };
     }
 
-    public async Task<Player?> CompleteGame(GameSession session)
+    public async Task CompleteGame(GameSession session)
     {
-        session.IsCompleted = true;
-        return await playerService.GetWinner(session);
+        session.IsActive = false;
+        await playerService.GetWinner(session);
     }
 
     public async Task<Player?> AddPlayer(string gameCode, string playerName)
@@ -73,7 +74,7 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
         GameSession? session = await GetGame(gameCode);
         if (session == null) { throw new Exception("Session couldn't be found"); }
 
-        var player = playerService.CreatePlayer(session, playerName);
+        var player = new Player(session, playerName);
         _context.Players.Add(player);
         await _context.SaveChangesAsync();
         return player;
