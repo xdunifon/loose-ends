@@ -216,3 +216,7 @@ orleans.codegen.cs
 *.msm
 *.msp
 .DS_Store
+
+# SQLITE files
+*.db-shm
+*.db-wal
