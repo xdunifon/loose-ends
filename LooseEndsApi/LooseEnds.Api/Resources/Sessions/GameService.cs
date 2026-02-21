@@ -66,7 +66,6 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
     public async Task CompleteGame(GameSession session)
     {
         session.IsActive = false;
-        await playerService.GetWinner(session);
     }
 
     public async Task<Player?> AddPlayer(string gameCode, string playerName)

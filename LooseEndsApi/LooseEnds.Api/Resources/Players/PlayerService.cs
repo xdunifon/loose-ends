@@ -1,31 +1,29 @@
 ﻿using LooseEnds.Api.Common;
+using LooseEnds.Api.Resources.Players.Dto;
 using LooseEnds.Database;
 using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEnds.Api.Resources.Players;
 
-public class PlayerService(GameContext context) : BaseService(context)
+public interface IPlayerService
 {
-    public async Task GetPlayersBySessionIdAsync(int sessionId)
+    Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId);
+    Task<PlayerDto> GetByIdAsync(int id);
+}
+
+public class PlayerService(GameContext context) : BaseService(context), IPlayerService
+{
+    public async Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId)
     {
-        var session = await _context.GameSessions
-            .Include(s => s.Players)
-            .FirstOrDefaultAsync(s => s.Id == sessionId)
-            ?? throw new NotFoundException($"Couldn't find session with ID {sessionId}");   
+        var session = await GetSessionByIdAsync(sessionId);
+        return session.Players.Select(PlayerDto.FromEntity);
     }
-    public Task GetPlayerByIdAsync(int id) => throw new NotImplementedException();
-    public Task GetWinningPlayerBySessionIdAsync(int sessionId) => throw new NotImplementedException();
-
-    public async Task<Player?> GetWinner(GameSession session)
+    public async Task<PlayerDto> GetByIdAsync(int id)
     {
-        Player winner = await _context.Players
-            .Where(player => player.SessionId == session.Id)
-            .OrderByDescending(player => player.Points)
-            .FirstAsync();
+        var player = await _context.Players.FirstOrDefaultAsync(p => p.Id == id)
+            ?? throw new NotFoundException($"Couldn't find player with ID {id}");
 
-        if (winner == null) { return null; }
-
-        return winner;
+        return PlayerDto.FromEntity(player);
     }
 }
