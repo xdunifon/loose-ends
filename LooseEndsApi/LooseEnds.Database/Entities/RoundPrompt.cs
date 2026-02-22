@@ -12,19 +12,31 @@ public class RoundPrompt
     [ForeignKey("Round")]
     public int RoundId { get; set; }
     public virtual Round Round { get; set; } = default!;
-    
-    public DateTime EndDateTime { get; set; }
     public required string Prompt { get; set; }
 
     public virtual ICollection<PlayerResponse> PlayerResponses { get; set; } = [];
 
     #region BEHAVIOR
     [SetsRequiredMembers]
-    public RoundPrompt(Round round, string content, int durationInSeconds)
+    public RoundPrompt(Round round, string content)
     {
         Round = round;
         Prompt = content;
-        EndDateTime = DateTime.UtcNow.AddSeconds(durationInSeconds);
+    }
+
+    public PlayerResponse AssignPlayer(Player player)
+    {
+        var pr = new PlayerResponse(player, this);
+        PlayerResponses.Add(pr);
+        return pr;
+    }
+
+    public void AssignPlayers(ICollection<Player> players)
+    {
+        foreach (var player in players)
+        {
+            AssignPlayer(player);
+        }
     }
     #endregion
 }

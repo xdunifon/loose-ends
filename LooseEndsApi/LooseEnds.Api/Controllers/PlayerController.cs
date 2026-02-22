@@ -24,14 +24,19 @@ public class PlayerController(IPlayerService playerService) : BaseController
     }
 
     [HttpPost("answer")]
-    [Authorize(Policy = "Player")]
+    [Authorize(Policy = Policies.Player)]
     public async Task<IActionResult> Answer()
     {
         var gameCode = GetGameCode();
         var playerId = GetUserId();
 
-        await
+        return Ok();
+    }
 
+    [HttpPost("vote")]
+    [Authorize(Policy = Policies.Player)]
+    public async Task<IActionResult> Vote()
+    {
         return Ok();
     }
 }

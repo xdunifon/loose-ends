@@ -63,12 +63,14 @@ public class GameSession
         }
     }
 
-    public Player AddPlayer(string id, string name)
+    public Player AddPlayer(string id, string name, bool isBot = false)
     {
         var player = new Player(id, this, name);
+        if (isBot) player.IsBot = true;
         Players.Add(player);
         return player;
     }
+
     public Player? GetRandomPlayer(IEnumerable<Player> excludedPlayers)
     {
         var players = excludedPlayers.Any() ? Players.Where(p => !excludedPlayers.Contains(p)) : Players;
@@ -80,9 +82,9 @@ public class GameSession
         return players.ElementAt(ranIndex);
     }
 
-    public Round AddRound(GameSession session, int roundNumber)
+    public Round AddRound(int roundNumber)
     {
-        var round = new Round(session, roundNumber);
+        var round = new Round(this, roundNumber);
         Rounds.Add(round);
         return round;
     }

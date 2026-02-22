@@ -1,4 +1,5 @@
 ﻿using LooseEnds.Api.Configuration;
+using LooseEnds.Api.Dtos.Sessions;
 using LooseEnds.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +25,21 @@ public class HostController(ISessionService sessionService) : BaseController
     }
 
     [HttpPost("start")]
-    [Authorize(Policy = "Host")]
-    public async Task<IActionResult> Start()
+    [Authorize(Policy = Policies.Host)]
+    public async Task<IActionResult> Start(StartGameRequest req)
     {
         var gameCode = GetGameCode();
-        await sessionService.StartAsync();
+        await sessionService.StartAsync(gameCode, req.RoundDurationInSeconds);
+
+        return Ok();
+    }
+
+    [HttpPost("next")]
+    [Authorize(Policy = Policies.Host)]
+    public async Task<IActionResult> Next()
+    {
+        var gameCode = GetGameCode();
+        await sessionService.NextAsync(gameCode);
         return Ok();
     }
 }

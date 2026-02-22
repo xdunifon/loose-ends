@@ -6,10 +6,10 @@ namespace LooseEnds.Database.Entities;
 
 public class Player
 {
-    public Player() { }
-
     [Key]
     public required string PlayerId { get; set; }
+
+    public bool IsBot { get; set; }
 
     [ForeignKey("Session")]
     public int SessionId { get; set; }

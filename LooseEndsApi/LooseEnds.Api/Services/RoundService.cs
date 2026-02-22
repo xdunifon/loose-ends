@@ -17,11 +17,22 @@ public interface IRoundService
 
     //Task<IEnumerable<VotingDto>?> GetVotingOptionsAsync(int sessionId, int playerId);
     //Task VoteAsync(int sessionId, int responseId, int playerId);
+
+    Task AnswerAsync();
+    Task VoteAsync();
 }
 
-public class RoundService(GameContext context, IHubContext<GameHub> hub) : BaseService(context), IRoundService
+public class RoundService(GameContext context) : BaseService(context), IRoundService
 {
+    public Task AnswerAsync()
+    {
+        throw new NotImplementedException();
+    }
 
+    public Task VoteAsync()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 #region REFERENCE
