@@ -8,11 +8,8 @@ namespace LooseEnds.Api.Services;
 
 public interface ISessionService
 {
-    Task GetByIdAsync(int id);
     Task<string> CreateAsync(string gameCode, string hostId);
     Task StartAsync();
-    
-    Task CompleteGameAsync();
 }
 
 public class SessionService(GameContext context, IOptions<GameSettings> options) : BaseService(context)
