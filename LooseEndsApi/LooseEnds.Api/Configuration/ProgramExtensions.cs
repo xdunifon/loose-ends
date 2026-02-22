@@ -29,9 +29,9 @@ public static class ProgramExtensions
 
     public static void RegisterServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<SessionService>();
-        builder.Services.AddScoped<PlayerService>();
-        builder.Services.AddScoped<PromptService>();
+        builder.Services.AddScoped<ISessionService, SessionService>();
+        builder.Services.AddScoped<IPlayerService, PlayerService>();
+        builder.Services.AddScoped<IRoundService, RoundService>();
     }
 
     public static void ConfigureGameSettings(this WebApplicationBuilder builder)
