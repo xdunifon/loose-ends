@@ -1,6 +1,4 @@
-﻿using LooseEnds.Api.Resources.Players;
-using LooseEnds.Api.Resources.Prompts;
-using LooseEnds.Api.Resources.Sessions;
+﻿using LooseEnds.Api.Services;
 using LooseEnds.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +29,7 @@ public static class ProgramExtensions
 
     public static void RegisterServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<GameService>();
+        builder.Services.AddScoped<SessionService>();
         builder.Services.AddScoped<PlayerService>();
         builder.Services.AddScoped<PromptService>();
     }

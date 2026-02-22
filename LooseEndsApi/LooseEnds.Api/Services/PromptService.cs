@@ -3,7 +3,7 @@ using LooseEnds.Database;
 using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LooseEnds.Api.Resources.Prompts;
+namespace LooseEnds.Api.Services;
 
 public interface IPromptService
 {
@@ -30,6 +30,7 @@ public class PromptService(GameContext context) : BaseService(context), IPromptS
         return await _context.Prompts.FindAsync(selectedId);
     }
 
+    #region REFERENCE
     //public async Task<List<RoundPrompt>> CreateRoundPrompts(GameSession session, Round round)
     //{
     //    var assignedPlayers = new List<Player>();
@@ -58,4 +59,5 @@ public class PromptService(GameContext context) : BaseService(context), IPromptS
 
     //    return roundPrompts;
     //}
+    #endregion
 }

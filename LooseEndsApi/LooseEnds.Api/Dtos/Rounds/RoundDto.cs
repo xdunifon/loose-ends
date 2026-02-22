@@ -1,6 +1,6 @@
 ﻿using LooseEnds.Database.Entities;
 
-namespace LooseEnds.Api.Resources.Rounds.Dtos;
+namespace LooseEnds.Api.Dtos.Rounds;
 
 public record RoundDto(int Id, int Number, bool IsCompleted, bool IsVoting)
 {

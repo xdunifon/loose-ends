@@ -20,7 +20,7 @@ async function startGame() {
   <div class="flex flex-col justify-center">
     <h2 class="text-2xl font-bold text-center mt-10">Players</h2>
 
-    <PlayerCard v-for="player in gameStore.players" :key="player" :name="player" />
+    <PlayerCard v-for="player in gameStore.players" :key="player.name" :name="player" />
 
     <Button label="Start Game" class="w-full mt-5" @click="gameStarting = true"></Button>
   </div>

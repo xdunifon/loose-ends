@@ -6,9 +6,10 @@ namespace LooseEnds.Database.Entities;
 
 public class Player
 {
+    public Player() { }
+
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public required string PlayerId { get; set; }
 
     [ForeignKey("Session")]
     public int SessionId { get; set; }
@@ -20,8 +21,9 @@ public class Player
 
     #region BEHAVIOR
     [SetsRequiredMembers]
-    public Player(GameSession session, string name)
+    public Player(string id, GameSession session, string name)
     {
+        PlayerId = id;
         Session = session;
         Name = name;
     }

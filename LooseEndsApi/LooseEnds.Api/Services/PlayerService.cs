@@ -1,19 +1,35 @@
 ﻿using LooseEnds.Api.Common;
-using LooseEnds.Api.Resources.Players.Dto;
+using LooseEnds.Api.Dtos.Players;
 using LooseEnds.Database;
-using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LooseEnds.Api.Resources.Players;
+namespace LooseEnds.Api.Services;
 
 public interface IPlayerService
 {
+    Task<string> JoinAsync(string gameCode, JoinRequest req);
+
     Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId);
     Task<PlayerDto> GetByIdAsync(int id);
 }
 
 public class PlayerService(GameContext context) : BaseService(context), IPlayerService
 {
+    public async Task<string> JoinAsync(string gameCode, JoinRequest req)
+    {
+        var session = await _context.GameSessions
+            .Where(s => s.IsActive && s.Rounds.Count == 0)
+            .Include(s => s.Players)
+            .FirstOrDefaultAsync(s => s.GameCode == gameCode)
+            ?? throw new NotFoundException($"Couldn't find an open game with code {gameCode}");
+
+        var playerId = Guid.NewGuid().ToString();
+        session.AddPlayer(playerId, req.Name);
+
+        await SaveContextAsync();
+        return playerId;
+    }
+
     public async Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId)
     {
         var session = await _context.GameSessions

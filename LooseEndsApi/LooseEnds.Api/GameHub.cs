@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace LooseEnds.Api.Resources;
+namespace LooseEnds.Api;
 
 public static class GameEvents
 {

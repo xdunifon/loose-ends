@@ -26,9 +26,11 @@ public class GameSession
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public DateTime DateCreatedUtc { get; set; } = DateTime.UtcNow;
+    public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
-    public string GameCode { get; set; } = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
+    public string HostId { get; set; }
+    public string GameCode { get; set; }
     public int RoundTimer { get; set; }
     
     public virtual List<Player> Players { get; set; } = [];
@@ -36,8 +38,10 @@ public class GameSession
 
     #region BEHAVIOR
     [SetsRequiredMembers]
-    public GameSession(int roundDurationInSeconds) 
+    public GameSession(string hostId, string gameCode, int roundDurationInSeconds) 
     {
+        HostId = hostId;
+        GameCode = gameCode;
         RoundTimer = roundDurationInSeconds;
     }
 
@@ -59,9 +63,9 @@ public class GameSession
         }
     }
 
-    public Player AddPlayer(string name)
+    public Player AddPlayer(string id, string name)
     {
-        var player = new Player(this, name);
+        var player = new Player(id, this, name);
         Players.Add(player);
         return player;
     }

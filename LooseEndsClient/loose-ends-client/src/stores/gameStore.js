@@ -15,12 +15,6 @@ export const useGameStore = defineStore('game', () => {
   const inLeaderboard = ref(false) // End of current round, leaderboard is shown
   const inGameOver = ref(false) // Game is over, show final leaderboard
 
-  // Round states
-  const roundMax = 3 // Max number of rounds
-  const roundNumber = ref(1) // Current round number
-  const promptTime = ref(5) // Time limit for each round
-  const voteTime = ref(5) // Time limit for voting
-
   // Game data
   const sessionId = ref('')
   const playerId = ref('')
@@ -38,10 +32,13 @@ export const useGameStore = defineStore('game', () => {
     })
 
     signalRService.on('PlayerJoined', (newSessionId, newPlayerName) => {
-      players.value.push(playerName)
+      players.value.push(newPlayerName)
       inLobby.value = true
-      sessionId.value = newSessionId
-      playerName.value = newPlayerName
+
+      if (!isHost.value) {
+        sessionId.value = newSessionId
+        playerName.value = newPlayerName
+      }
     })
 
     signalRService.on('GameCreated', (newSessionId) => {
@@ -51,7 +48,7 @@ export const useGameStore = defineStore('game', () => {
       console.log(`Session ID ${newSessionId} received`)
     })
 
-    signalRService.on('GameStarted', () => {
+    signalRService.on('GameStarted', (gameRound) => {
       inGame.value = true
       inLobby.value = true
       inRound.value = true
@@ -61,7 +58,9 @@ export const useGameStore = defineStore('game', () => {
       inRound.value = true
     })
 
-    // Add more listeners
+    signalRService.on('VotingEnded', () => {
+      inVoting.value = false
+    })
   }
 
   return {

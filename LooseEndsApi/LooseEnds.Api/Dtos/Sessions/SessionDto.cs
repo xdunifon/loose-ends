@@ -1,4 +1,4 @@
-﻿namespace LooseEnds.Api.Models.GameSessions;
+﻿namespace LooseEnds.Api.Dtos.Sessions;
 
 public class SessionDto
 {

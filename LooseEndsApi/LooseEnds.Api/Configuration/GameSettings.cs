@@ -3,4 +3,5 @@
 public class GameSettings
 {
     public int NumberOfRounds { get; set; }
+    public int RoundDurationInSeconds { get; set; }
 }

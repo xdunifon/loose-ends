@@ -1,6 +1,6 @@
 ﻿using LooseEnds.Database.Entities;
 
-namespace LooseEnds.Api.Resources.Rounds.Dtos;
+namespace LooseEnds.Api.Dtos.Rounds;
 
 public record VotingDto(int PlayerResponseId, string PromptContent, string Answer, DateTime EndDateUtc)
 {

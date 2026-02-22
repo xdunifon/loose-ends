@@ -1,7 +1,7 @@
-﻿using LooseEnds.Api.Resources.Players.Dto;
+﻿using LooseEnds.Api.Dtos.Players;
 using LooseEnds.Database.Entities;
 
-namespace LooseEnds.Api.Resources.Rounds.Dtos;
+namespace LooseEnds.Api.Dtos.Rounds;
 
 public record RoundPromptDto(int RoundPromptId, DateTime EndDateUtc, IEnumerable<PlayerDto> AssignedPlayers, string PromptContent)
 {

@@ -1,6 +1,6 @@
 ﻿using LooseEnds.Database.Entities;
 
-namespace LooseEnds.Api.Resources.Players.Dto;
+namespace LooseEnds.Api.Dtos.Players;
 
 public record PlayerDto(int Id, string Name, int Points)
 {

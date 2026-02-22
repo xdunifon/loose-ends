@@ -1,6 +1,10 @@
+import { signalRService } from '@/services/signalRService'
+import { useGameStore } from '@/stores/gameStore'
+
 export const roundService = {
   async submitAnswer(answer) {
-    // signalR to submit answer
+    const gameStore = useGameStore()
+    signalRService.send('PlayerVote', gameStore.sessionId, gameStore.playerName, answer)
   },
 
   async submitVote(promptId) {

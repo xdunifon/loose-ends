@@ -1,13 +1,17 @@
+using LooseEnds.Api;
 using LooseEnds.Api.Configuration;
-using LooseEnds.Api.Resources;
 using LooseEnds.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
+Auth.Configure(builder);
 builder.ConfigureDatabase();
 builder.RegisterServices();
 builder.ConfigureGameSettings();
@@ -37,6 +41,7 @@ app.UseCors();
 app.MapHub<GameHub>("/gamehub");
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
