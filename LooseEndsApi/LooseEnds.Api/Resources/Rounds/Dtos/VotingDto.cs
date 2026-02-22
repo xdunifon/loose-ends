@@ -1,10 +1,16 @@
-﻿using LooseEnds.Api.Resources.Prompts.Dtos;
+﻿using LooseEnds.Database.Entities;
 
 namespace LooseEnds.Api.Resources.Rounds.Dtos;
 
-public class VotingDto
+public record VotingDto(int PlayerResponseId, string PromptContent, string Answer, DateTime EndDateUtc)
 {
-    public string GameCode { get; set; }
-    public DateTime EndDateTime { get; set; }
-    public required PromptDto[] Prompts { get; set; }
+    public static VotingDto FromEntity(PlayerResponse playerResponse, string defaultAnswer)
+    {
+        return new(
+            playerResponse.Id,
+            playerResponse.Prompt.Prompt,
+            playerResponse.Answer ?? defaultAnswer,
+            playerResponse.Prompt.EndDateTime
+        );
+    }
 }

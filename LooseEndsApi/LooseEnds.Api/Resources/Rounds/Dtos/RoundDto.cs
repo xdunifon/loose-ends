@@ -1,10 +1,11 @@
-﻿using LooseEnds.Api.Resources.Prompts.Dtos;
+﻿using LooseEnds.Database.Entities;
 
 namespace LooseEnds.Api.Resources.Rounds.Dtos;
 
-public class RoundDto
+public record RoundDto(int Id, int Number, bool IsCompleted, bool IsVoting)
 {
-    public required string GameCode { get; set; }
-    public DateTime EndDateTime { get; set; }
-    public required PromptDto[] Prompts { get; set; }
+    public static RoundDto FromEntity(Round round)
+    {
+        return new(round.Id, round.Number, round.IsCompleted, round.VotingRoundPromptId.HasValue);
+    }
 }

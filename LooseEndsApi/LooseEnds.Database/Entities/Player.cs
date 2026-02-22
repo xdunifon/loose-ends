@@ -15,8 +15,6 @@ public class Player
     public virtual GameSession Session { get; set; } = default!;
 
     public required string Name { get; set; }
-    public int Points { get; set; } = 0;
-
     public virtual ICollection<PlayerResponse> Responses { get; set; } = [];
     public virtual ICollection<PlayerVote> Votes { get; set; } = [];
 
@@ -26,13 +24,6 @@ public class Player
     {
         Session = session;
         Name = name;
-        Points = 0;
-    }
-
-    public int AddPoints(int points)
-    {
-        Points += points;
-        return Points;
     }
 
     public PlayerResponse CreateResponse(RoundPrompt prompt)

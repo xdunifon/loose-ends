@@ -31,5 +31,13 @@ public class PlayerResponse
     {
         Answer = answer;
     }
+
+    public void AddVote(int playerId)
+    {
+        if (!Votes.Any(v => v.PlayerId == playerId))
+        {
+            Votes.Add(new PlayerVote { PlayerId = playerId, Response = this });
+        }
+    }
     #endregion
 }

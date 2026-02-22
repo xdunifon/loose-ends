@@ -14,9 +14,12 @@ public class Round
     public virtual GameSession Session { get; set; } = default!;
 
     public bool IsCompleted { get; set; } = false;
-    public bool IsVoting { get; set; } = false;
 
     public int Number { get; set; }
+
+    [ForeignKey("VotingRoundPrompt")]
+    public int? VotingRoundPromptId { get; set; }
+    public virtual RoundPrompt? VotingRoundPrompt { get; set; }
 
     public virtual ICollection<RoundPrompt> RoundPrompts { get; set; } = [];
 

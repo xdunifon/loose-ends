@@ -50,7 +50,7 @@ public class GameSession
         if (currentRound == null || currentRound.IsCompleted)
         {
             return GameStatus.Lobby;
-        } else if (currentRound.IsVoting)
+        } else if (currentRound.VotingRoundPromptId.HasValue)
         {
             return GameStatus.Voting;
         } else

@@ -16,12 +16,22 @@ public class PlayerService(GameContext context) : BaseService(context), IPlayerS
 {
     public async Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId)
     {
-        var session = await GetSessionByIdAsync(sessionId);
+        var session = await _context.GameSessions
+            .Where(s => s.IsActive)
+            .Include(s => s.Players)
+                .ThenInclude(p => p.Responses)
+                    .ThenInclude(r => r.Votes)
+            .FirstOrDefaultAsync(s => s.Id == sessionId)
+            ?? throw new NotFoundException($"Couldn't find session with ID {sessionId}");
+
         return session.Players.Select(PlayerDto.FromEntity);
     }
     public async Task<PlayerDto> GetByIdAsync(int id)
     {
-        var player = await _context.Players.FirstOrDefaultAsync(p => p.Id == id)
+        var player = await _context.Players
+            .Include(p => p.Responses)
+                .ThenInclude(r => r.Votes)
+            .FirstOrDefaultAsync(p => p.Id == id)
             ?? throw new NotFoundException($"Couldn't find player with ID {id}");
 
         return PlayerDto.FromEntity(player);

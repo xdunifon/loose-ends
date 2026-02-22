@@ -4,7 +4,6 @@ using LooseEnds.Api.Configuration;
 using LooseEnds.Api.Resources.Rounds.Dtos;
 using LooseEnds.Api.Common;
 using LooseEnds.Api.Resources.Players;
-using LooseEnds.Api.Resources.Prompts.Dtos;
 using LooseEnds.Database;
 using LooseEnds.Database.Entities;
 
@@ -51,16 +50,17 @@ public class GameService(IOptions<GameSettings> options, GameContext context, Pl
         _context.Rounds.Add(newRound);
         await SaveContextAsync();
 
-        return new RoundDto
-        {
-            GameCode = session.GameCode,
-            EndDateTime = DateTime.Now.AddSeconds(session.RoundTimer + 1), // Given a buffer of 1 to account for transmission speeds, not sure how this plays out in practice
-            Prompts = newRound.RoundPrompts.Select(p => new PromptDto
-            {
-                AssignedPlayers = p.PlayerResponses.Select(pr => pr.Player.Name).ToArray(),
-                Content = p.Prompt
-            }).ToArray()
-        };
+        throw new NotImplementedException();
+        //return new RoundDto
+        //{
+        //    GameCode = session.GameCode,
+        //    EndDateTime = DateTime.Now.AddSeconds(session.RoundTimer + 1), // Given a buffer of 1 to account for transmission speeds, not sure how this plays out in practice
+        //    Prompts = newRound.RoundPrompts.Select(p => new RoundPromptDto
+        //    {
+        //        AssignedPlayers = p.PlayerResponses.Select(pr => pr.Player.Name).ToArray(),
+        //        Content = p.Prompt
+        //    }).ToArray()
+        //};
     }
 
     public async Task CompleteGame(GameSession session)
