@@ -12,6 +12,12 @@ public static class UserRole
     public const string Host = "Host";
 }
 
+public static class Policies
+{
+    public const string Player = "Player";
+    public const string Host = "Host";
+}
+
 public class Auth
 {
     private static readonly byte[] KEY = Encoding.ASCII.GetBytes("super_secret_key_12345");
@@ -35,8 +41,8 @@ public class Auth
         });
 
         builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("Host", policy => policy.RequireClaim("role", UserRole.Host))
-            .AddPolicy("Player", policy => policy.RequireClaim("role", UserRole.Player));
+            .AddPolicy(Policies.Host, policy => policy.RequireClaim("role", UserRole.Host))
+            .AddPolicy(Policies.Host, policy => policy.RequireClaim("role", UserRole.Player));
     }
 
     public static string CreateToken(string gameCode, string identifier, string name, string role)
