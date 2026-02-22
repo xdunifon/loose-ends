@@ -4,6 +4,9 @@ using LooseEnds.Api.Common;
 using LooseEnds.Database;
 using LooseEnds.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using LooseEnds.Api.Dtos.Rounds;
+using LooseEnds.Api.Dtos.Players;
 
 namespace LooseEnds.Api.Services;
 
@@ -14,7 +17,7 @@ public interface ISessionService
     Task NextAsync(string gameCode);
 }
 
-public class SessionService(GameContext context, IOptions<GameSettings> options) : BaseService(context), ISessionService
+public class SessionService(GameContext context, IOptions<GameSettings> options, IHubContext<GameHub> hub) : BaseService(context), ISessionService
 {
     public async Task<string> CreateAsync(string gameCode, string hostId)
     {
@@ -32,11 +35,11 @@ public class SessionService(GameContext context, IOptions<GameSettings> options)
             .Include(s => s.Players)
             .Include(s => s.Rounds)
             .Where(s => s.GameCode == gameCode)
-            .FirstOrDefault() ?? throw new NotFoundException($"Couldn't find game with code {gameCode}");
+            .FirstOrDefault() ?? throw GameExceptions.GameNotFound(gameCode);
 
         // Validate that the game can start
-        if (game.Rounds.Count > 0) throw new Exception("This game has already been started");
-        if (game.Players.Count < 3) throw new Exception("At least two players are required to start");
+        if (game.Rounds.Count > 0) throw GameExceptions.AlreadyStarted(gameCode);
+        if (game.Players.Count < 3) throw GameExceptions.ThreeRequired();
 
         game.RoundTimer = roundDurationInSeconds;
 
@@ -86,7 +89,34 @@ public class SessionService(GameContext context, IOptions<GameSettings> options)
 
     public async Task NextAsync(string gameCode)
     {
-        throw new NotImplementedException();
+        var game = await _context.GameSessions
+            .Where(s => s.IsActive)
+            .Include(s => s.Rounds)
+            .FirstOrDefaultAsync(s => s.GameCode == gameCode)
+            ?? throw GameExceptions.GameNotFound(gameCode);
+
+        var nextRound = game.GetNextRound();
+        if (nextRound == null)
+        {
+            var players = await _context.Players
+                .Include(p => p.Responses)
+                    .ThenInclude(r => r.Votes)
+                .Where(p => p.SessionId == game.Id)
+                .ToListAsync();
+
+            var dto = players.Select(PlayerScoreDto.FromEntity);
+
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameOver);
+        } else
+        {
+            // Add buffer second for processing time
+            nextRound.EndDateTime = DateTime.Now.AddSeconds(game.RoundTimer + 1);
+            await SaveContextAsync();
+
+            // Notify users
+            var noti = new RoundStartedDto(nextRound.Number, nextRound.EndDateTime.Value);
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundStarted, noti);
+        }
     }
 }
 
@@ -97,64 +127,8 @@ public class SessionService(GameContext context, IOptions<GameSettings> options)
 //        return await _context.GameSessions.FirstOrDefaultAsync(g => g.GameCode == gameCode);
 //    }
 
-//    public async Task<string> CreateGame()
-//    {
-//        var newGame = new GameSession(30);
-//        _context.GameSessions.Add(newGame);
-
-//        await _context.SaveChangesAsync();
-//        return newGame.GameCode;
-//    }
-
-//    /// <summary>
-//    /// Start game session and return the first round.
-//    /// Null result means that the game was already created
-//    /// </summary>
-//    /// <param name="session"></param>
-//    /// <returns></returns>
-//    public async Task<RoundDto?> StartGame(GameSession session)
-//    {
-//        return await StartNextRoundOrCompleteGame(session);
-//    }
-
-//    public async Task<RoundDto?> StartNextRoundOrCompleteGame(GameSession session)
-//    {
-//        if (session.Rounds.Count() >= options.Value.NumberOfRounds)
-//        {
-//            await CompleteGame(session);
-//            return null;
-//        }
-
-//        Round newRound = new(session, session.Rounds.Count + 1);
-//        _context.Rounds.Add(newRound);
-//        await SaveContextAsync();
-
-//        throw new NotImplementedException();
-//        //return new RoundDto
-//        //{
-//        //    GameCode = session.GameCode,
-//        //    EndDateTime = DateTime.Now.AddSeconds(session.RoundTimer + 1), // Given a buffer of 1 to account for transmission speeds, not sure how this plays out in practice
-//        //    Prompts = newRound.RoundPrompts.Select(p => new RoundPromptDto
-//        //    {
-//        //        AssignedPlayers = p.PlayerResponses.Select(pr => pr.Player.Name).ToArray(),
-//        //        Content = p.Prompt
-//        //    }).ToArray()
-//        //};
-//    }
-
 //    public async Task CompleteGame(GameSession session)
 //    {
 //        session.IsActive = false;
-//    }
-
-//    public async Task<Player?> AddPlayer(string gameCode, string playerName)
-//    {
-//        GameSession? session = await GetGame(gameCode);
-//        if (session == null) { throw new Exception("Session couldn't be found"); }
-
-//        var player = new Player(session, playerName);
-//        _context.Players.Add(player);
-//        await _context.SaveChangesAsync();
-//        return player;
 //    }
 #endregion

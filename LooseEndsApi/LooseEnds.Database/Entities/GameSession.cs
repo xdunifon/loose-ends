@@ -88,9 +88,12 @@ public class GameSession
         Rounds.Add(round);
         return round;
     }
-    public Round? GetLatestRound()
+    public Round? GetNextRound()
     {
-        return Rounds.OrderByDescending(r => r.Number).FirstOrDefault();
+        return Rounds
+            .Where(r => !r.IsCompleted)
+            .OrderBy(r => r.Number)
+            .First();
     }
     #endregion
 }
