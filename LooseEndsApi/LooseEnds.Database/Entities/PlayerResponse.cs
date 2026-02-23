@@ -25,6 +25,7 @@ public class PlayerResponse
     public PlayerResponse(Player player, RoundPrompt prompt)
     {
         Player = player;
+        PlayerId = player.PlayerId;
         Prompt = prompt;
     }
 
