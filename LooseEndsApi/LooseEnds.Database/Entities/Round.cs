@@ -14,7 +14,7 @@ public class Round
     public virtual GameSession Session { get; set; } = default!;
 
     public bool IsCompleted { get; set; } = false;
-    public DateTime? EndDateTime { get; set; }
+    public DateTime? EndUtc { get; set; }
 
     public int Number { get; set; }
 

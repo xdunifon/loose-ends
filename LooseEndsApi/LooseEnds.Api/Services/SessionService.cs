@@ -110,25 +110,12 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         } else
         {
             // Add buffer second for processing time
-            nextRound.EndDateTime = DateTime.Now.AddSeconds(game.RoundTimer + 1);
+            nextRound.EndUtc = DateTime.Now.AddSeconds(game.RoundTimer + 1);
             await SaveContextAsync();
 
             // Notify users
-            var noti = new RoundStartedDto(nextRound.Number, nextRound.EndDateTime.Value);
+            var noti = new RoundStartedDto(nextRound.Number, nextRound.EndUtc.Value);
             await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundStarted, noti);
         }
     }
 }
-
-#region REFERENCE
-
-//public async Task<GameSession?> GetGame(string gameCode)
-//    {
-//        return await _context.GameSessions.FirstOrDefaultAsync(g => g.GameCode == gameCode);
-//    }
-
-//    public async Task CompleteGame(GameSession session)
-//    {
-//        session.IsActive = false;
-//    }
-#endregion

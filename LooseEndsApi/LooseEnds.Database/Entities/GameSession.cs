@@ -12,15 +12,6 @@ namespace LooseEnds.Database.Entities;
  *  4. Completed (game has ended, players can no longer join)
  */
 
-public enum GameStatus
-{
-    InActive = 0,
-    Lobby = 1,
-    Prompting = 2,
-    Voting = 3,
-    Completed = 4
-}
-
 public class GameSession
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -43,24 +34,6 @@ public class GameSession
         HostId = hostId;
         GameCode = gameCode;
         RoundTimer = roundDurationInSeconds;
-    }
-
-    public GameStatus Status()
-    {
-        if (!IsActive) return GameStatus.InActive;
-        if (Rounds.Count == 0) return GameStatus.Lobby;
-
-        var currentRound = GetLatestRound();
-        if (currentRound == null || currentRound.IsCompleted)
-        {
-            return GameStatus.Lobby;
-        } else if (currentRound.VotingRoundPromptId.HasValue)
-        {
-            return GameStatus.Voting;
-        } else
-        {
-            return GameStatus.Prompting;
-        }
     }
 
     public Player AddPlayer(string id, string name, bool isBot = false)

@@ -8,7 +8,7 @@ public class PlayerVote
     public PlayerVote() { }
 
     [Key, ForeignKey("Player")]
-    public int PlayerId { get; set; }
+    public required string PlayerId { get; set; }
     public virtual Player Player { get; set; } = default!;
 
     [Key, ForeignKey("Response")]

@@ -8,7 +8,7 @@ public class PlayerResponse
     public int Id { get; set; }
 
     [ForeignKey("Player")]
-    public int PlayerId { get; set; }
+    public required string PlayerId { get; set; }
     public virtual Player Player { get; set; } = default!;
 
     [ForeignKey("Prompt")]
@@ -16,6 +16,7 @@ public class PlayerResponse
     public virtual RoundPrompt Prompt { get; set; } = default!;
 
     public string? Answer { get; set; }
+    public DateTime? SubmittedUtc { get; set; }
 
     public virtual ICollection<PlayerVote> Votes { get; set; } = [];
 
@@ -32,7 +33,7 @@ public class PlayerResponse
         Answer = answer;
     }
 
-    public void AddVote(int playerId)
+    public void AddVote(string playerId)
     {
         if (!Votes.Any(v => v.PlayerId == playerId))
         {
