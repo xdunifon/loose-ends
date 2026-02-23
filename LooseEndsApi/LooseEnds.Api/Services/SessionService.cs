@@ -21,7 +21,7 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
 {
     public async Task<string> CreateAsync(string gameCode, string hostId)
     {
-        var newGame = new GameSession(hostId, gameCode, options.Value.RoundDurationInSeconds);
+        var newGame = new GameSession(hostId, gameCode, options.Value.DefaultPromptingDuration);
 
         _context.GameSessions.Add(newGame);
         await SaveContextAsync();
@@ -92,11 +92,16 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         var game = await _context.GameSessions
             .Where(s => s.IsActive)
             .Include(s => s.Rounds)
+                .ThenInclude(r => r.RoundPrompts)
+                    .ThenInclude(rp => rp.PlayerResponses)
+                        .ThenInclude(pr => pr.Votes)
             .FirstOrDefaultAsync(s => s.GameCode == gameCode)
             ?? throw GameExceptions.GameNotFound(gameCode);
 
         var nextRound = game.GetNextRound();
-        if (nextRound == null) // All rounds completed, game is over
+
+        // Game over
+        if (nextRound == null)
         {
             var players = await _context.Players
                 .Include(p => p.Responses)
@@ -105,29 +110,75 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
                 .ToListAsync();
 
             var dto = players.Select(PlayerScoreDto.FromEntity);
-
-            await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameOver);
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameOver, dto);
+            return;
         }
-        else if (!nextRound.AnswerDueUtc.HasValue) // Round has not started, start it
+
+        // Start round (prompting)
+        if (!nextRound.AnswerDueUtc.HasValue)
         {
-            // Add buffer second for processing time
-            nextRound.AnswerDueUtc = DateTime.Now.AddSeconds(game.RoundTimer + 1);
+            nextRound.AnswerDueUtc = DateTime.UtcNow.AddSeconds(game.RoundTimer + 1);
             await SaveContextAsync();
 
-            // Notify users
-            var noti = new RoundStartedDto(nextRound.Number, nextRound.AnswerDueUtc.Value);
-            await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundStarted, noti);
+            var dto = new RoundStartedDto(nextRound.Number, nextRound.AnswerDueUtc.Value);
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundStarted, dto);
+            return;
         }
-        else if (nextRound.AnswerDueUtc.HasValue) // Round has at least started
+
+        // Stop prompting
+        if (!nextRound.PromptingCompleted)
         {
-            if (!nextRound.VoteDueUtc.HasValue)
-            {
-                // Prompting is still active, end early
-            }
-            else if (nextRound.VoteDueUtc.HasValue)
-            {
-                // Voting is still active, end early
-            }
+            nextRound.PromptingCompleted = true;
+            await SaveContextAsync();
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.PromptingEnded);
+            return;
         }
+
+        // Start voting
+        if (!nextRound.VotingRoundPromptId.HasValue)
+        {
+            var nextPrompt = nextRound.RoundPrompts.First();
+            nextRound.VotingRoundPrompt = nextPrompt;
+            nextPrompt.VoteDueUtc = DateTime.UtcNow.AddSeconds(options.Value.VotingDuration + 1);
+
+            await SaveContextAsync();
+
+            // TODO: Send DTO alongside with vote options and due date
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted);
+            return;
+        }
+            
+        // End voting for current prompt
+        if (nextRound.VotingRoundPrompt != null && !nextRound.VotingRoundPrompt.IsCompleted)
+        {
+            nextRound.VotingRoundPrompt.IsCompleted = true;
+            await SaveContextAsync();
+
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingEnded);
+            return;
+        }
+
+        // Get next round prompt to vote on
+        var prompt = nextRound.RoundPrompts
+            .FirstOrDefault(p => !p.IsCompleted);
+
+        // Round is complete
+        if (prompt == null)
+        {
+            nextRound.VotingRoundPrompt = null;
+            nextRound.VotingCompleted = true;
+            await SaveContextAsync();
+
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundEnded);
+            return;
+        }
+
+        // Move to next prompt
+        nextRound.VotingRoundPrompt = prompt;
+        prompt.VoteDueUtc = DateTime.UtcNow.AddSeconds(options.Value.VotingDuration + 1);
+        await SaveContextAsync();
+
+        // TODO: Send DTO alongside with vote options and due date
+        await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted);
     }
 }

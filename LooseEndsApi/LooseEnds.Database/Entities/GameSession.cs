@@ -64,7 +64,7 @@ public class GameSession
     public Round? GetNextRound()
     {
         return Rounds
-            .Where(r => !r.IsCompleted)
+            .Where(r => !r.VotingCompleted)
             .OrderBy(r => r.Number)
             .First();
     }

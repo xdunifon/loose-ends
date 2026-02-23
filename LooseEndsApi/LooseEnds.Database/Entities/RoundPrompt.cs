@@ -14,6 +14,9 @@ public class RoundPrompt
     public virtual Round Round { get; set; } = default!;
     public required string Prompt { get; set; }
 
+    public DateTime? VoteDueUtc { get; set; }
+    public bool IsCompleted { get; set; } = false;
+
     public virtual ICollection<PlayerResponse> PlayerResponses { get; set; } = [];
 
     #region BEHAVIOR

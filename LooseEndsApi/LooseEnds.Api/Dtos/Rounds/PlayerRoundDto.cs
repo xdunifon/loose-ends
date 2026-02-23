@@ -9,7 +9,7 @@ public record PlayerRoundDto(int Id, int Number, bool IsCompleted, bool IsVoting
         return new(
             entity.RoundId,
             entity.Round.Number,
-            entity.Round.IsCompleted,
+            entity.Round.VotingCompleted,
             entity.Round.VotingRoundPromptId.HasValue,
             RoundPromptDto.FromEntity(entity)
         );
