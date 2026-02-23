@@ -22,7 +22,7 @@ public class RoundService(GameContext context, IHubContext<GameHub> hub) : BaseS
             .FirstOrDefaultAsync(r => r.Id == responseId && r.PlayerId == playerId)
             ?? throw GameExceptions.InvalidAnswer();
 
-        if (!response.Prompt.Round.EndUtc.HasValue || response.Prompt.Round.EndUtc.Value < DateTime.UtcNow)
+        if (!response.Prompt.Round.AnswerDueUtc.HasValue || response.Prompt.Round.AnswerDueUtc.Value < DateTime.UtcNow)
         {
             throw GameExceptions.InvalidAnswer();
         }

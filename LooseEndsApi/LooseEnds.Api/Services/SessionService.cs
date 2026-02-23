@@ -96,7 +96,7 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
             ?? throw GameExceptions.GameNotFound(gameCode);
 
         var nextRound = game.GetNextRound();
-        if (nextRound == null)
+        if (nextRound == null) // All rounds completed, game is over
         {
             var players = await _context.Players
                 .Include(p => p.Responses)
@@ -107,15 +107,27 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
             var dto = players.Select(PlayerScoreDto.FromEntity);
 
             await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameOver);
-        } else
+        }
+        else if (!nextRound.AnswerDueUtc.HasValue) // Round has not started, start it
         {
             // Add buffer second for processing time
-            nextRound.EndUtc = DateTime.Now.AddSeconds(game.RoundTimer + 1);
+            nextRound.AnswerDueUtc = DateTime.Now.AddSeconds(game.RoundTimer + 1);
             await SaveContextAsync();
 
             // Notify users
-            var noti = new RoundStartedDto(nextRound.Number, nextRound.EndUtc.Value);
+            var noti = new RoundStartedDto(nextRound.Number, nextRound.AnswerDueUtc.Value);
             await hub.Clients.Group(gameCode).SendAsync(GameEvents.RoundStarted, noti);
+        }
+        else if (nextRound.AnswerDueUtc.HasValue) // Round has at least started
+        {
+            if (!nextRound.VoteDueUtc.HasValue)
+            {
+                // Prompting is still active, end early
+            }
+            else if (nextRound.VoteDueUtc.HasValue)
+            {
+                // Voting is still active, end early
+            }
         }
     }
 }
