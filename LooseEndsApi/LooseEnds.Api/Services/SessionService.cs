@@ -13,7 +13,7 @@ namespace LooseEnds.Api.Services;
 
 public interface ISessionService
 {
-    Task<string> GetAsync(string gameCode);
+    Task<SessionStateDto> GetAsync(string gameCode);
     Task<string> CreateAsync(string gameCode, string hostId);
     Task StartAsync(string gameCode, int roundDurationInSeconds);
     Task NextAsync(string gameCode);
