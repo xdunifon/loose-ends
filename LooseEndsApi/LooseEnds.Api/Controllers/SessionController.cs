@@ -18,4 +18,10 @@ public class SessionController(ISessionService service) : BaseController
 
         return Ok(await service.GetAsync(gameCode));
     }
+
+    [HttpGet("ping")]
+    public async Task<IActionResult> Ping()
+    {
+        return Ok(DateTime.UtcNow.ToShortDateString());
+    }
 }
