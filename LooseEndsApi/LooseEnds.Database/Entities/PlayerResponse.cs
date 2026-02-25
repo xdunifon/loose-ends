@@ -5,18 +5,19 @@ namespace LooseEnds.Database.Entities;
 
 public class PlayerResponse
 {
+    public PlayerResponse() { }
+
     public int Id { get; set; }
-
-    [ForeignKey("Player")]
-    public required string PlayerId { get; set; }
-    public virtual Player Player { get; set; } = default!;
-
-    [ForeignKey("Prompt")]
-    public int PromptId { get; set; }
-    public virtual RoundPrompt Prompt { get; set; } = default!;
-
     public string? Answer { get; set; }
     public DateTime? SubmittedUtc { get; set; }
+
+    public required string PlayerId { get; set; }
+    [ForeignKey(nameof(PlayerId))]
+    public virtual Player Player { get; set; } = default!;
+
+    public int PromptId { get; set; }
+    [ForeignKey(nameof(PromptId))]
+    public virtual RoundPrompt Prompt { get; set; } = default!;
 
     public virtual ICollection<PlayerVote> Votes { get; set; } = [];
 

@@ -6,16 +6,17 @@ namespace LooseEnds.Database.Entities;
 
 public class RoundPrompt
 {
+    public RoundPrompt() { }
+
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
-    [ForeignKey("Round")]
-    public int RoundId { get; set; }
-    public virtual Round Round { get; set; } = default!;
     public required string Prompt { get; set; }
-
     public DateTime? VoteDueUtc { get; set; }
     public bool IsCompleted { get; set; } = false;
+
+    public int RoundId { get; set; }
+    [ForeignKey(nameof(RoundId))]
+    public virtual Round Round { get; set; } = default!;
 
     public virtual ICollection<PlayerResponse> PlayerResponses { get; set; } = [];
 

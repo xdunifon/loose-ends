@@ -4,24 +4,18 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LooseEnds.Database.Entities;
 
-/**
- * States:
- *  1. Lobby (players can join, but game has not started)
- *  2. Prompting (game has started, players can no longer join but can reconnect)
- *  3. Voting (players can vote on prompts, but can no longer submit answers)
- *  4. Completed (game has ended, players can no longer join)
- */
-
 public class GameSession
 {
+    public GameSession() { }
+
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public DateTime DateCreatedUtc { get; set; } = DateTime.UtcNow;
     public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
-    public string HostId { get; set; }
-    public string GameCode { get; set; }
+    public required string HostId { get; set; }
+    public required string GameCode { get; set; }
     public int RoundTimer { get; set; }
     
     public virtual List<Player> Players { get; set; } = [];

@@ -12,5 +12,5 @@ public class GameContext(DbContextOptions<GameContext> options) : DbContext(opti
     public DbSet<Prompt> Prompts { get; set; }
     public DbSet<Round> Rounds { get; set; }
     public DbSet<RoundPrompt> RoundPrompts { get; set; }
-    public DbSet<DefaultResponse> DefaultResponses { get; set; }
+    public DbSet<DefaultResponse> DefaultResponses { get; set; } 
 }

@@ -6,24 +6,25 @@ namespace LooseEnds.Database.Entities;
 
 public class Round
 {
+    public Round() { }
+
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
-    [ForeignKey("Session")]
-    public int SessionId { get; set; }
-    public virtual GameSession Session { get; set; } = default!;
-
+    public int Number { get; set; }
     public bool PromptingCompleted { get; set; } = false;
     public bool VotingCompleted { get; set; } = false;
     public DateTime? AnswerDueUtc { get; set; }
 
-    public int Number { get; set; }
+    public int SessionId { get; set; }
+    [ForeignKey(nameof(SessionId))]
+    public virtual GameSession Session { get; set; } = default!;
 
     // Which round is being actively voted on
-    [ForeignKey("VotingRoundPrompt")]
     public int? VotingRoundPromptId { get; set; }
+    [ForeignKey(nameof(VotingRoundPromptId))]
     public virtual RoundPrompt? VotingRoundPrompt { get; set; }
 
+    [InverseProperty(nameof(RoundPrompt.Round))]
     public virtual ICollection<RoundPrompt> RoundPrompts { get; set; } = [];
 
     #region BEHAVIOR

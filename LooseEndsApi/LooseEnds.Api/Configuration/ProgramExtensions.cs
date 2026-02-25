@@ -8,7 +8,20 @@ public static class ProgramExtensions
 {
     public static void ConfigureDatabase(this WebApplicationBuilder builder)
     {
-        var connectionString = builder.Configuration.GetConnectionString("GameConnection");
+        var key = "GameConnection";
+        var connectionString = builder.Configuration.GetConnectionString("GameConnection") 
+            ?? throw new Exception($"Couldn't find connection string using key {key}");
+        
+        // Doing this so I can specify a file system path to prevent it from looking for a server
+        if (connectionString.StartsWith("Data Source="))
+        {
+            var dbPath = connectionString.Replace("Data Source=", "");
+            var fullPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, dbPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+
+            connectionString = $"Data Source={fullPath}";
+        }
+
         builder.Services.AddDbContext<GameContext>(options => options.UseSqlite(connectionString));
     }
 
