@@ -8,14 +8,14 @@ namespace LooseEnds.Api.Controllers;
 
 [ApiController]
 [Route("api/game")]
-public class HostController(ISessionService sessionService) : BaseController
+public class HostController(ISessionService service) : BaseController
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create()
     {
         var gameCode = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
         var hostId = Guid.NewGuid().ToString();
-        await sessionService.CreateAsync(gameCode, hostId);
+        await service.CreateAsync(gameCode, hostId);
 
         return Ok(new
         {
@@ -24,22 +24,20 @@ public class HostController(ISessionService sessionService) : BaseController
         });
     }
 
-    [HttpPost("start")]
-    [Authorize(Policy = Policies.Host)]
+    [HttpPost("start"), Authorize(Policy = Policies.Host)]
     public async Task<IActionResult> Start(StartGameRequest req)
     {
         var gameCode = GetGameCode();
-        await sessionService.StartAsync(gameCode, req.RoundDurationInSeconds);
+        await service.StartAsync(gameCode, req.RoundDurationInSeconds);
 
         return Ok();
     }
 
-    [HttpPost("next")]
-    [Authorize(Policy = Policies.Host)]
+    [HttpPost("next"), Authorize(Policy = Policies.Host)]
     public async Task<IActionResult> Next()
     {
         var gameCode = GetGameCode();
-        await sessionService.NextAsync(gameCode);
+        await service.NextAsync(gameCode);
         return Ok();
     }
 }

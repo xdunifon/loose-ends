@@ -2,10 +2,27 @@
 
 namespace LooseEnds.Api.Dtos.Rounds;
 
-public record RoundDto(int Id, int Number, bool IsCompleted, bool IsVoting)
+public record RoundDto
 {
-    public static RoundDto FromEntity(Round round)
+    public int Number { get; init; }
+
+    public DateTime? AnswerDueUtc { get; init; }
+    public bool PromptingCompleted { get; init; }
+
+
+    public int? ActiveVotingPromptId { get; init; }
+    public bool VotingCompleted { get; init; }
+
+    public IEnumerable<PromptDto> Prompts { get; init; } = [];
+
+    public static RoundDto FromEntity(Round r) => new()
     {
-        return new(round.Id, round.Number, round.VotingCompleted, round.VotingRoundPromptId.HasValue);
-    }
+        Number = r.Number,
+        AnswerDueUtc = r.AnswerDueUtc,
+        PromptingCompleted = r.PromptingCompleted,
+        ActiveVotingPromptId = r.VotingRoundPromptId,
+        VotingCompleted = r.VotingCompleted,
+
+        Prompts = r.RoundPrompts.Select(PromptDto.FromEntity)
+    };
 }

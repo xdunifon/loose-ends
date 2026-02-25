@@ -7,11 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using LooseEnds.Api.Dtos.Rounds;
 using LooseEnds.Api.Dtos.Players;
+using LooseEnds.Api.Dtos.Sessions;
 
 namespace LooseEnds.Api.Services;
 
 public interface ISessionService
 {
+    Task<string> GetAsync(string gameCode);
     Task<string> CreateAsync(string gameCode, string hostId);
     Task StartAsync(string gameCode, int roundDurationInSeconds);
     Task NextAsync(string gameCode);
@@ -19,6 +21,25 @@ public interface ISessionService
 
 public class SessionService(GameContext context, IOptions<GameSettings> options, IHubContext<GameHub> hub) : BaseService(context), ISessionService
 {
+    private IQueryable<GameSession> FullStateIncludes(IQueryable<GameSession> query) => query
+        .Include(s => s.Players)
+            .ThenInclude(p => p.Responses)
+                .ThenInclude(r => r.Votes)
+        .Include(s => s.Rounds)
+            .ThenInclude(r => r.RoundPrompts)
+                .ThenInclude(rp => rp.PlayerResponses);
+
+    public async Task<SessionStateDto> GetAsync(string gameCode)
+    {
+        var game = await FullStateIncludes(_context.GameSessions)
+            .Where(s => s.IsActive)
+            .FirstOrDefaultAsync(s => s.GameCode == gameCode)
+            ?? throw GameExceptions.GameNotFound(gameCode);
+
+        var result = SessionStateDto.FromEntity(game);
+        return result;
+    }
+
     public async Task<string> CreateAsync(string gameCode, string hostId)
     {
         var newGame = new GameSession(hostId, gameCode, options.Value.DefaultPromptingDuration);

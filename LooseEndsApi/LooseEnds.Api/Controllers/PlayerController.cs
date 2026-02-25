@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LooseEnds.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/game")]
 [ApiController]
 public class PlayerController(IPlayerService playerService, IRoundService roundService) : BaseController
 {
@@ -24,8 +24,7 @@ public class PlayerController(IPlayerService playerService, IRoundService roundS
         });
     }
 
-    [HttpPost("answer")]
-    [Authorize(Policy = Policies.Player)]
+    [HttpPost("answer"), Authorize(Policy = Policies.Player)]
     public async Task<IActionResult> Answer(AnswerRequest req)
     {
         var gameCode = GetGameCode();
@@ -36,8 +35,7 @@ public class PlayerController(IPlayerService playerService, IRoundService roundS
         return Ok();
     }
 
-    [HttpPost("vote")]
-    [Authorize(Policy = Policies.Player)]
+    [HttpPost("vote"), Authorize(Policy = Policies.Player)]
     public async Task<IActionResult> Vote(VoteRequest req)
     {
         var gameCode = GetGameCode();
