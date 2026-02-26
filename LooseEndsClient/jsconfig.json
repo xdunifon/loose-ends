@@ -1,4 +1,4 @@
-{
+j{
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
