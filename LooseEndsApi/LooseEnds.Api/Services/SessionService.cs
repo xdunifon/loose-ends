@@ -21,7 +21,7 @@ public interface ISessionService
 
 public class SessionService(GameContext context, IOptions<GameSettings> options, IHubContext<GameHub> hub) : BaseService(context), ISessionService
 {
-    private IQueryable<GameSession> FullStateIncludes(IQueryable<GameSession> query) => query
+    private static IQueryable<GameSession> FullStateIncludes(IQueryable<GameSession> query) => query
         .Include(s => s.Players)
             .ThenInclude(p => p.Responses)
                 .ThenInclude(r => r.Votes)
@@ -106,6 +106,9 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         }
 
         await SaveContextAsync();
+
+        var dto = SessionStateDto.FromEntity(game);
+        await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameStarted, dto);
     }
 
     public async Task NextAsync(string gameCode)
