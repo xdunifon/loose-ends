@@ -20,7 +20,7 @@ public static class Policies
 
 public class Auth
 {
-    private static readonly byte[] KEY = Encoding.ASCII.GetBytes("super_secret_key_12345");
+    private static readonly byte[] KEY = Encoding.ASCII.GetBytes("djfjioaweUIOSDFH&sj8awme7vfhfarh");
 
     public static void Configure(WebApplicationBuilder builder)
     {
