@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace LooseEnds.Api.Controllers;
 
-[Route("api/game")]
+[Route("game")]
 [ApiController]
 public class BaseController : ControllerBase
 {

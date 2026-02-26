@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LooseEnds.Api.Controllers;
 
 [ApiController]
-[Route("api/game")]
+[Route("game")]
 public class SessionController(ISessionService service) : BaseController
 {
     [HttpGet("")]

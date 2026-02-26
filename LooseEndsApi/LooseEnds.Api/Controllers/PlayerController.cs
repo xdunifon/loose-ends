@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LooseEnds.Api.Controllers;
 
-[Route("api/game")]
+[Route("game")]
 [ApiController]
 public class PlayerController(IPlayerService playerService, IRoundService roundService) : BaseController
 {
