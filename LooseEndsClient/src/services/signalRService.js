@@ -3,7 +3,7 @@ import * as signalR from '@microsoft/signalr'
 class SignalRService {
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7029/gamehub')
+      .withUrl('https://localhost:5001/hub')
       .withAutomaticReconnect()
       .build()
 
@@ -12,10 +12,10 @@ class SignalRService {
 
   async start() {
     if (this.started) return
-    this.started = true
-
+    
     try {
       await this.connection.start()
+      this.started = true
       console.log('SignalR connected')
     } catch (err) {
       console.error('SignalR connection error:', err)

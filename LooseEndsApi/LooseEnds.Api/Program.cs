@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors();
-app.MapHub<GameHub>("/gamehub");
+app.MapHub<GameHub>("/hub");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
