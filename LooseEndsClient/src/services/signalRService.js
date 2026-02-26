@@ -1,17 +1,22 @@
+import { useAuthStore } from '@/stores/authStore'
 import * as signalR from '@microsoft/signalr'
 
 class SignalRService {
   constructor() {
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/hub')
-      .withAutomaticReconnect()
-      .build()
-
+    this.connection = null
     this.started = false
   }
 
   async start() {
     if (this.started) return
+    const authStore = useAuthStore()
+
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:5001/hub', {
+        accessTokenFactory: () => authStore.token
+      })
+      .withAutomaticReconnect()
+      .build()
     
     try {
       await this.connection.start()
@@ -24,12 +29,12 @@ class SignalRService {
   }
 
   on(event, callback) {
-    this.connection.on(event, callback)
+    this.connection?.on(event, callback)
   }
 
   async send(method, ...args) {
     try {
-      await this.connection.invoke(method, ...args)
+      await this.connection?.invoke(method, ...args)
     } catch (err) {
       console.error(`Error sending ${method}:`, err)
     }

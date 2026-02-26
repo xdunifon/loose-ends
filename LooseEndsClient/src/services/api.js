@@ -1,14 +1,18 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore'
 
 const apiClient = axios.create({
-  baseURL: 'https://localhost:5001',
+  baseURL: 'https://localhost:5001/game',
   timeout: 10000,
 })
 
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    // Add headers or modify request before sending
+    const authStore = useAuthStore()
+    if (authStore.token) {
+      config.headers.Authorization = `Bearer ${authStore.token}`
+    }
     return config
   },
   (error) => {
