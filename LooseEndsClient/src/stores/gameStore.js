@@ -30,8 +30,6 @@ export const useGameStore = defineStore('game', () => {
   }
 
   return {
-    debugMode,
-
     gameCode,
     playerId,
     players,
