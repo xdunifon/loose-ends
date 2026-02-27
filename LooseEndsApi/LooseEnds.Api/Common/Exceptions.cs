@@ -14,3 +14,4 @@ public class GameStartedException(string message) : Exception(message) { }
 public class ThreePlayersRequiredException(string message): Exception(message) { }
 public class InvalidAnswer(string message): Exception(message) { }
 public class InvalidVote(string message): Exception(message) { }
+public class Unauthorized(string message): Exception(message) { }
