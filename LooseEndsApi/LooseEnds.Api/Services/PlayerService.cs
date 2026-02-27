@@ -1,21 +1,19 @@
 ﻿using LooseEnds.Api.Common;
 using LooseEnds.Api.Dtos.Players;
 using LooseEnds.Database;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LooseEnds.Api.Services;
 
 public interface IPlayerService
 {
-    Task<string> JoinAsync(string gameCode, JoinRequest req);
-
-    //Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId);
-    //Task<PlayerDto> GetByIdAsync(int id);
+    Task<string> JoinAsync(string gameCode, string name);
 }
 
-public class PlayerService(GameContext context) : BaseService(context), IPlayerService
+public class PlayerService(GameContext context, IHubContext<GameHub> hub) : BaseService(context), IPlayerService
 {
-    public async Task<string> JoinAsync(string gameCode, JoinRequest req)
+    public async Task<string> JoinAsync(string gameCode, string name)
     {
         var session = await _context.GameSessions
             .Where(s => s.IsActive && s.Rounds.Count == 0)
@@ -24,34 +22,10 @@ public class PlayerService(GameContext context) : BaseService(context), IPlayerS
             ?? throw new NotFoundException($"Couldn't find an open game with code {gameCode}");
 
         var playerId = Guid.NewGuid().ToString();
-        session.AddPlayer(playerId, req.Name);
+        var player = session.AddPlayer(playerId, name);
 
         await SaveContextAsync();
+        await hub.Clients.Group(gameCode).SendAsync(GameEvents.PlayerJoined, PlayerDto.FromEntity(player));
         return playerId;
     }
-
-    #region REFERENCE
-    //public async Task<IEnumerable<PlayerDto>> GetBySessionIdAsync(int sessionId)
-    //{
-    //    var session = await _context.GameSessions
-    //        .Where(s => s.IsActive)
-    //        .Include(s => s.Players)
-    //            .ThenInclude(p => p.Responses)
-    //                .ThenInclude(r => r.Votes)
-    //        .FirstOrDefaultAsync(s => s.Id == sessionId)
-    //        ?? throw new NotFoundException($"Couldn't find session with ID {sessionId}");
-
-    //    return session.Players.Select(PlayerDto.FromEntity);
-    //}
-    //public async Task<PlayerDto> GetByIdAsync(int id)
-    //{
-    //    var player = await _context.Players
-    //        .Include(p => p.Responses)
-    //            .ThenInclude(r => r.Votes)
-    //        .FirstOrDefaultAsync(p => p.Id == id)
-    //        ?? throw new NotFoundException($"Couldn't find player with ID {id}");
-
-    //    return PlayerDto.FromEntity(player);
-    //}
-    #endregion
 }

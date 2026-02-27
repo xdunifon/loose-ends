@@ -14,12 +14,11 @@ public class PlayerController(IPlayerService playerService, IRoundService roundS
     [HttpPost("join")]
     public async Task<IActionResult> Join([FromBody] JoinRequest req)
     {
-        var gameCode = GetGameCode();
-        var playerId = await playerService.JoinAsync(gameCode, req);
+        var playerId = await playerService.JoinAsync(req.GameCode, req.Name);
 
         return Ok(new
         {
-            Token = Auth.CreateToken(gameCode, playerId, req.Name, UserRole.Player),
+            Token = Auth.CreateToken(req.GameCode, playerId, req.Name, UserRole.Player),
             PlayerId = playerId
         });
     }
