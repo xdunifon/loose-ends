@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/authStore'
 
 const apiClient = axios.create({
   baseURL: 'https://localhost:5001/game',
-  timeout: 10000,
 })
 
 // Request Interceptor
