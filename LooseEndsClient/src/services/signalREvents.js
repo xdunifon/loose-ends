@@ -1,14 +1,16 @@
 export const events = {
-    playerJoined: 'PlayerJoined',
-    playerSubmitted: 'PlayerSubmitted',
-    playerVoted: 'PlayerVoted',
+  joinSession: 'JoinSession',
 
-    gameStarted: 'GameStarted',
-    gameOver: 'GameOver',
+  playerJoined: 'PlayerJoined',
+  playerSubmitted: 'PlayerSubmitted',
+  playerVoted: 'PlayerVoted',
 
-    roundStarted: 'RoundStarted',
-    promptingEnded: 'PromptingEnded',
-    roundEnded: 'RoundEnded',
-    votingStarted: 'VotingStarted',
-    votingEnded: 'VotingEnded'
+  gameStarted: 'GameStarted',
+  gameOver: 'GameOver',
+
+  roundStarted: 'RoundStarted',
+  promptingEnded: 'PromptingEnded',
+  roundEnded: 'RoundEnded',
+  votingStarted: 'VotingStarted',
+  votingEnded: 'VotingEnded',
 }

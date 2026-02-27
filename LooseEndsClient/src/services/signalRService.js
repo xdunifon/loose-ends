@@ -7,24 +7,24 @@ class SignalRService {
     this.started = false
   }
 
-  async start() {
+  async startAsync() {
     if (this.started) return
     const authStore = useAuthStore()
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:5001/hub', {
-        accessTokenFactory: () => authStore.token
+        accessTokenFactory: () => authStore.token,
       })
       .withAutomaticReconnect()
       .build()
-    
+
     try {
       await this.connection.start()
       this.started = true
       console.log('SignalR connected')
     } catch (err) {
       console.error('SignalR connection error:', err)
-      setTimeout(() => this.start(), 2000)
+      setTimeout(() => this.startAsync(), 2000)
     }
   }
 
@@ -32,7 +32,7 @@ class SignalRService {
     this.connection?.on(event, callback)
   }
 
-  async send(method, ...args) {
+  async sendAsync(method, ...args) {
     try {
       await this.connection?.invoke(method, ...args)
     } catch (err) {

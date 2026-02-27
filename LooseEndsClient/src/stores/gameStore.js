@@ -12,11 +12,12 @@ export const useGameStore = defineStore('game', () => {
   const gameState = ref({
     promptingDuration: 0,
     votingDuration: 0,
-    rounds: []
+    rounds: [],
   })
 
   const initSignalR = async () => {
-    await signalRService.start()
+    await signalRService.startAsync()
+    await signalRService.sendAsync(events.joinSession)
 
     signalRService.on(events.gameStarted, (dto) => {
       console.log(events.gameStarted, dto)
@@ -26,8 +27,14 @@ export const useGameStore = defineStore('game', () => {
       gameState.value = {
         promptingDuration: dto.promptingDuration,
         votingDuration: dto.votingDuration,
-        rounds: dto.rounds
+        rounds: dto.rounds,
       }
+    })
+
+    signalRService.on(events.playerJoined, (dto) => {
+      console.log(events.playerJoined, dto)
+
+      players.value.push(dto)
     })
   }
 
@@ -35,6 +42,7 @@ export const useGameStore = defineStore('game', () => {
     gameCode,
     userId,
     players,
+    isHost,
 
     initSignalR,
   }
