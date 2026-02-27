@@ -20,7 +20,8 @@ public class HostController(ISessionService service) : BaseController
         return Ok(new
         {
             Token = Auth.CreateToken(gameCode, hostId, $"Host{gameCode}", UserRole.Host),
-            HostId = hostId
+            HostId = hostId,
+            GameCode = gameCode
         });
     }
 
