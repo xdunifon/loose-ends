@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using LooseEnds.Api.Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LooseEnds.Api;
 
@@ -17,13 +19,15 @@ public static class GameEvents
     public const string VotingEnded = "VotingEnded";
 }
 
+[Authorize]
 public class GameHub : Hub
 {
-    public async Task JoinSession(string gameCode)
+    public async Task JoinSession()
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, gameCode);
+        var gameCode = Context.User?.FindFirst("gameCode")?.Value
+            ?? throw new Unauthorized("Could not get the game code from user's claims");
 
-        // Send notification
+        await Groups.AddToGroupAsync(Context.ConnectionId, gameCode);
         await Clients.Group(gameCode).SendAsync(GameEvents.PlayerJoined, Context.ConnectionId);
     }
 }
