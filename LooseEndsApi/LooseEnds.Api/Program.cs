@@ -5,8 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
 builder.Services.AddControllers();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 Auth.Configure(builder);
 builder.ConfigureDatabase();
@@ -38,6 +41,7 @@ app.UseCors();
 app.MapHub<GameHub>("/hub");
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
