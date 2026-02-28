@@ -11,8 +11,14 @@ export const useAuthStore = defineStore('auth', () => {
     document.cookie = `session=${newToken}; max-age=${60 * 60}; path=/` // One hour in seconds
   }
 
+  const clearToken = () => {
+    token.value = null
+    document.cookie = `session=; max-age=-9999999;`
+  }
+
   return {
     token,
     setToken,
+    clearToken,
   }
 })
