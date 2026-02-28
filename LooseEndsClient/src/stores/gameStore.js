@@ -43,11 +43,13 @@ export const useGameStore = defineStore('game', () => {
       }
     })
 
-    signalRService.on(events.playerJoined, (dto) => {
-      console.log(events.playerJoined, dto)
+    if (isHost.value) {
+      signalRService.on(events.playerJoined, (dto) => {
+        console.log(events.playerJoined, dto)
 
-      players.value.push(dto)
-    })
+        players.value.push(dto)
+      })
+    }
   }
 
   return {
