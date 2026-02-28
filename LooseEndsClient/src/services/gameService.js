@@ -6,12 +6,8 @@ export const gameService = {
   // Get data for entire session
   async getAsync() {
     const response = (await apiClient.get()).data
-
-    const { players, gameState } = useGameStore()
-    players.value = response.players
-    gameState.value.promptingDuration = response.promptingDuration
-    gameState.value.votingDuration = response.votingDuration
-    gameState.value.rounds = response.rounds
+    const gameStore = useGameStore()
+    gameStore.setState(response)
   },
 
   // Create a new game
@@ -27,7 +23,17 @@ export const gameService = {
     gameStore.gameCode = response.gameCode
   },
 
-  // Join an existing game
+  // Start the game
+  async startAsync() {
+    await apiClient.post('start', {})
+  },
+
+  // Move the game into the next state
+  async nextAsync() {
+    await apiClient.post('next')
+  },
+
+  // Join an existing game using the game code and player's name
   async joinAsync(newGameCode, playerName) {
     const response = (await apiClient.post('join', { gameCode: newGameCode, name: playerName }))
       .data
@@ -38,5 +44,15 @@ export const gameService = {
     const gameStore = useGameStore()
     gameStore.gameCode = newGameCode
     gameStore.userId = response.playerId
+  },
+
+  // Answer a prompt using the existing response ID and the player's answer
+  async answerAsync(responseId, answer) {
+    await apiClient.post('answer', { responseId, answer })
+  },
+
+  // Vote for a response by its ID
+  async voteAsync(responseId) {
+    await apiClient.post('vote', { responseId })
   },
 }
