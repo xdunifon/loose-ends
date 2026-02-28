@@ -164,8 +164,13 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
 
             await SaveContextAsync();
 
-            // TODO: Send DTO alongside with vote options and due date
-            await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted);
+            var dto = new VotingStartedDto(
+                nextRound.Number, 
+                nextPrompt.Id, 
+                nextPrompt.VoteDueUtc.Value,
+                nextPrompt.PlayerResponses.Select(pr => VoteOptionDto.FromEntity(pr))
+            );
+            await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted, dto);
             return;
         }
             
@@ -199,7 +204,12 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         prompt.VoteDueUtc = DateTime.UtcNow.AddSeconds(options.Value.VotingDuration + 1);
         await SaveContextAsync();
 
-        // TODO: Send DTO alongside with vote options and due date
-        await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted);
+        var vDto = new VotingStartedDto(
+                nextRound.Number, 
+                prompt.Id, 
+                prompt.VoteDueUtc.Value,
+                prompt.PlayerResponses.Select(pr => VoteOptionDto.FromEntity(pr))
+            );
+        await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted, vDto);
     }
 }

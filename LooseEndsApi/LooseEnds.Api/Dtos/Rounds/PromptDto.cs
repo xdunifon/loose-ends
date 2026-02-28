@@ -10,7 +10,7 @@ public record PromptDto
     public DateTime? VoteDueUtc { get; init; }
     public bool IsCompleted { get; init; }
 
-    public IEnumerable<VoteOptionsDto> VoteOptions { get; init; } = [];
+    public IEnumerable<VoteOptionDto> VoteOptions { get; init; } = [];
 
     public static PromptDto FromEntity(RoundPrompt p) => new()
     {
@@ -19,6 +19,6 @@ public record PromptDto
         VoteDueUtc = p.VoteDueUtc,
         IsCompleted = p.IsCompleted,
 
-        VoteOptions = p.PlayerResponses.Select(VoteOptionsDto.FromEntity)
+        VoteOptions = p.PlayerResponses.Select(VoteOptionDto.FromEntity)
     };
 }
