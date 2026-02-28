@@ -24,4 +24,10 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         return true;
     }
+
+    public static void Configure(WebApplicationBuilder builder)
+    {
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    }
 }

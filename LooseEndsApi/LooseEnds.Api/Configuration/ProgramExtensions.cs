@@ -49,11 +49,4 @@ public static class ProgramExtensions
         builder.Services.AddScoped<IPlayerService, PlayerService>();
         builder.Services.AddScoped<IRoundService, RoundService>();
     }
-
-    public static void ConfigureGameSettings(this WebApplicationBuilder builder)
-    {
-        builder.Services.Configure<GameSettings>(
-            builder.Configuration.GetSection("GameSettings")
-        );
-    }
 }

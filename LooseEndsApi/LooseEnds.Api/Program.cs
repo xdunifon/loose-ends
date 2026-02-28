@@ -8,13 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
 builder.Services.AddControllers();
 
-builder.Services.AddProblemDetails();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
+GlobalExceptionHandler.Configure(builder);
 Auth.Configure(builder);
+GameSettings.Configure(builder);
 builder.ConfigureDatabase();
 builder.RegisterServices();
-builder.ConfigureGameSettings();
 builder.ConfigureCors();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Run migrate on startup so code is self migrating when deploying
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<GameContext>();
