@@ -74,11 +74,11 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         var promptsPerRound = game.Players.Count / 2;
         var numPrompts = options.Value.NumberOfRounds * promptsPerRound;
         
-        // Order by random guids and take first n prompts
-        // TODO: Generating a random GUID for every single entry is not very efficient, replace this in the future
+        // Order by random and take first n prompts
+        // TODO: Generating a random num for every single entry is not very efficient, replace this in the future
         var promptOptions = await _context.Prompts
             .Where(p => p.Active)
-            .OrderBy(x => Guid.NewGuid())
+            .OrderBy(x => EF.Functions.Random())
             .Take(numPrompts)
             .ToListAsync();
 
