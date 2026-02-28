@@ -10,13 +10,14 @@ namespace LooseEnds.Api.Controllers;
 public class SessionController(ISessionService service) : BaseController
 {
     [HttpGet("")]
-    [Authorize(Policy = Policies.Host)]
-    [Authorize(Policy = Policies.Player)]
+    [Authorize(Roles = $"{UserRole.Host}, {UserRole.Player}")]
     public async Task<IActionResult> Get()
     {
         var gameCode = GetGameCode();
+        var isHost = IsHost();
+        var userId = GetUserId();
 
-        return Ok(await service.GetAsync(gameCode));
+        return Ok(await service.GetAsync(gameCode, isHost, userId));
     }
 
     [HttpGet("ping")]

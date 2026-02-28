@@ -13,7 +13,7 @@ namespace LooseEnds.Api.Services;
 
 public interface ISessionService
 {
-    Task<SessionStateDto> GetAsync(string gameCode);
+    Task<SessionStateDto> GetAsync(string gameCode, bool isHost, string userId);
     Task<string> CreateAsync(string gameCode, string hostId);
     Task StartAsync(string gameCode, int roundDurationInSeconds);
     Task NextAsync(string gameCode);
@@ -29,14 +29,14 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
             .ThenInclude(r => r.RoundPrompts)
                 .ThenInclude(rp => rp.PlayerResponses);
 
-    public async Task<SessionStateDto> GetAsync(string gameCode)
+    public async Task<SessionStateDto> GetAsync(string gameCode, bool isHost, string userId)
     {
         var game = await FullStateIncludes(_context.GameSessions)
             .Where(s => s.IsActive)
             .FirstOrDefaultAsync(s => s.GameCode == gameCode)
             ?? throw GameExceptions.GameNotFound(gameCode);
 
-        var result = SessionStateDto.FromEntity(game);
+        var result = SessionStateDto.FromEntity(game, isHost, userId);
         return result;
     }
 
@@ -106,9 +106,6 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
         }
 
         await SaveContextAsync();
-
-        var dto = SessionStateDto.FromEntity(game);
-        await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameStarted, dto);
     }
 
     public async Task NextAsync(string gameCode)

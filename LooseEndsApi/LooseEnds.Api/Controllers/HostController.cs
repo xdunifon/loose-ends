@@ -3,12 +3,13 @@ using LooseEnds.Api.Dtos.Sessions;
 using LooseEnds.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LooseEnds.Api.Controllers;
 
 [ApiController]
 [Route("game")]
-public class HostController(ISessionService service) : BaseController
+public class HostController(ISessionService service, IHubContext<GameHub> hub) : BaseController
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create()
@@ -29,7 +30,13 @@ public class HostController(ISessionService service) : BaseController
     public async Task<IActionResult> Start(StartGameRequest req)
     {
         var gameCode = GetGameCode();
+        var isHost = IsHost();
+        var userId = GetUserId();
+
         await service.StartAsync(gameCode, req.RoundDurationInSeconds);
+        var gameState = await service.GetAsync(gameCode, isHost, userId);
+
+        await hub.Clients.Group(gameCode).SendAsync(GameEvents.GameStarted, gameState);
 
         return Ok();
     }
