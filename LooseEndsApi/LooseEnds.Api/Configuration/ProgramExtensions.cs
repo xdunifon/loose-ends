@@ -22,7 +22,10 @@ public static class ProgramExtensions
             connectionString = $"Data Source={fullPath}";
         }
 
-        builder.Services.AddDbContext<GameContext>(options => options.UseSqlite(connectionString));
+        builder.Services.AddDbContext<GameContext>(options => {
+            options.UseSqlite(connectionString);
+            options.UseSeeding((context, isDev) => GameContext.SeedData(context, isDev));
+        });
     }
 
     public static void ConfigureCors(this WebApplicationBuilder builder)
