@@ -47,6 +47,11 @@ public class RoundService(GameContext context, IHubContext<GameHub> hub) : BaseS
             .FirstOrDefaultAsync(r => r.Id == responseId && r.PlayerId != playerId && r.Prompt.Round.VotingRoundPromptId == r.Prompt.Id)
             ?? throw GameExceptions.InvalidVote();
 
+        if (!response.Prompt.VoteDueUtc.HasValue || response.Prompt.VoteDueUtc.Value < DateTime.UtcNow)
+        {
+            throw GameExceptions.InvalidVote();
+        }
+
         response.AddVote(playerId);
         await SaveContextAsync();
 
