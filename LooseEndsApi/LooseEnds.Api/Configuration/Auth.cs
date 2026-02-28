@@ -56,7 +56,7 @@ public class Auth
 
         builder.Services.AddAuthorizationBuilder()
             .AddPolicy(Policies.Host, policy => policy.RequireClaim("role", UserRole.Host))
-            .AddPolicy(Policies.Host, policy => policy.RequireClaim("role", UserRole.Player));
+            .AddPolicy(Policies.Player, policy => policy.RequireClaim("role", UserRole.Player));
     }
 
     public static string CreateToken(string gameCode, string identifier, string name, string role)
