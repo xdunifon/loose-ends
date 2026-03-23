@@ -168,7 +168,7 @@ public class SessionService(GameContext context, IOptions<GameSettings> options,
                 nextRound.Number, 
                 nextPrompt.Id, 
                 nextPrompt.VoteDueUtc.Value,
-                nextPrompt.PlayerResponses.Select(pr => VoteOptionDto.FromEntity(pr))
+                nextPrompt.PlayerResponses.Select(VoteOptionDto.FromEntity)
             );
             await hub.Clients.Group(gameCode).SendAsync(GameEvents.VotingStarted, dto);
             return;

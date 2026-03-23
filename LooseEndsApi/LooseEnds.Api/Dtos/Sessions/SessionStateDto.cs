@@ -9,7 +9,7 @@ public record SessionStateDto
     public required string GameCode { get; init; }
     public DateTime DateCreatedUtc { get; init; }
     public bool IsHost { get; init; }
-    public string UserId { get; init; }
+    public required string UserId { get; init; }
     public int PromptingDuration { get; init; }
     public int VotingDuration { get; init; }
 

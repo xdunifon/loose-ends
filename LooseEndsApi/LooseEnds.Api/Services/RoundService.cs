@@ -1,5 +1,4 @@
 ﻿using LooseEnds.Api.Common;
-using LooseEnds.Api.Dtos.Rounds;
 using LooseEnds.Database;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +32,8 @@ public class RoundService(GameContext context, IHubContext<GameHub> hub) : BaseS
         await SaveContextAsync();
 
         await hub.Clients.Group(gameCode).SendAsync(GameEvents.PlayerSubmitted, playerId);
+
+        // check if all players have submitted and end round if so
     }
 
     public async Task VoteAsync(string gameCode, string playerId, int responseId)
