@@ -1,4 +1,5 @@
 ﻿using LooseEnds.Api.Configuration;
+using LooseEnds.Api.Data;
 using LooseEnds.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ public class SessionController(ISessionService service) : BaseController
         var isHost = IsHost();
         var userId = GetUserId();
 
+        // return Ok(Mock.HostPromptStart());
         return Ok(await service.GetAsync(gameCode, isHost, userId));
     }
 
